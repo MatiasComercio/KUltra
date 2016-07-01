@@ -55,16 +55,16 @@ precedence left LT, LTEQ, GT, GTEQ;
 precedence left EQEQ, NOTEQ;
 
 
-Program                 ::=             MethodList:ml StatementList:sl {: RESULT = new ProgramNode(ml, new BodyNode(sl)); :}
+Program                 ::=             MethodList:ml StatementList:sl // {: RESULT = new ProgramNode(ml, new BodyNode(sl)); :}
                                         ;
 
 
-MethodList              ::=             Method:m MethodList:ml {: RESULT = ml; ml.add(m); :}
-                                        | /* lambda */ {: RESULT = new LinkedList<>(); :}
+MethodList              ::=             Method:m MethodList:ml // {: RESULT = ml; ml.add(m); :}
+                                        | /* lambda */ // {: RESULT = new LinkedList<>(); :}
                                         ;
 
 Method                  ::=             DEF Type:t IDENTIFIER:i LPAREN Parameters:p RPAREN COLON StatementList:sl Return:r END
-                    {: RESULT = new MethodNode("helloWorld", null, helloWorldBodyNode, new ReturnNode(t, p)); :}
+                    // {: RESULT = new MethodNode("helloWorld", null, helloWorldBodyNode, new ReturnNode(t, p)); :}
                                         ;
 
 Return                  ::=             RETURN Expression SEMICOLON;

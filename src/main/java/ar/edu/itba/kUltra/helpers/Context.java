@@ -9,7 +9,6 @@ import org.objectweb.asm.commons.Method;
 
 import java.util.*;
 
-import static org.objectweb.asm.Opcodes.*;
 import static org.objectweb.asm.Opcodes.IRETURN;
 import static org.objectweb.asm.Opcodes.RETURN;
 
@@ -26,12 +25,14 @@ public class Context {
 
 	private final Map<String, ArgumentNode> argumentNodes;
 
+	private final Type returnType;
+
 	/**
 	 * Stores VariableNodes, and when saved, it assigns an index corresponding to the local variable
 	 */
 	private final Map<String, Integer> indexedVariableNodes;
 
-	public Context(final GeneratorAdapter mg, final List<ArgumentNode> argumentNodes, final DefinedMethods definedMethods) {
+	public Context(final GeneratorAdapter mg, final List<ArgumentNode> argumentNodes, final DefinedMethods definedMethods, final Type returnType) {
 		this.mg = mg;
 
 		if (definedMethods == null) {
@@ -52,6 +53,8 @@ public class Context {
 		}
 
 		this.indexedVariableNodes = new HashMap<>();
+
+		this.returnType = returnType;
 
 	}
 
@@ -289,14 +292,14 @@ public class Context {
 		TYPE_TO_RETURN_OPCODE.put(Type.VOID_TYPE, RETURN);
 	}
 
-	public void returnProcess(final Type type) {
-		if (type == null) {
+	public void returnProcess() {
+		if (returnType == null) {
 			// should never reach here, but just in case...
 			mg.visitInsn(RETURN);
 			return;
 		}
 
-		Integer returnOpcode = TYPE_TO_RETURN_OPCODE.get(type);
+		Integer returnOpcode = TYPE_TO_RETURN_OPCODE.get(returnType);
 		if (returnOpcode == null) { // default is to return an object
 			returnOpcode = Opcodes.ARETURN;
 		}

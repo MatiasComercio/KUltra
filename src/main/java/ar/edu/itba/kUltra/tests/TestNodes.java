@@ -20,10 +20,10 @@ public class TestNodes {
 		final List<StatementNode> helloWorldStatementNodes = new LinkedList<>();
 		helloWorldStatementNodes.add(new MethodCallNode("puts",
 				putsArgument("Hello world from 'helloWorld' method!\n")));
+		helloWorldStatementNodes.add(new ReturnNode(null));
 		final BodyNode helloWorldBodyNode = new BodyNode(helloWorldStatementNodes);
 
-		final MethodNode helloWorldMethodNode = new MethodNode("helloWorld", null, helloWorldBodyNode,
-				new ReturnNode("void", null));
+		final MethodNode helloWorldMethodNode = new MethodNode("void", "helloWorld", null, helloWorldBodyNode);
 
 		final List<MethodNode> methodNodes = new LinkedList<>();
 		methodNodes.add(helloWorldMethodNode);

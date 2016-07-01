@@ -222,7 +222,7 @@ public class ASMGenerator implements Opcodes {
 		mg.newInstance(Type.getType(ArrayList.class));
 		mg.dup();
 		mg.visitMethodInsn(INVOKESPECIAL, "java/util/ArrayList", "<init>", "()V", false);
-//		mg.invokeVirtual(Type.getType(ArrayList.class), Method.getMethod("java.util.ArrayList ()"));
+//		mg.invokeVirtual(Type.getReturnType(ArrayList.class), Method.getMethod("java.util.ArrayList ()"));
 		int list = mg.newLocal(Type.getType(List.class));
 		mg.storeLocal(list);
 

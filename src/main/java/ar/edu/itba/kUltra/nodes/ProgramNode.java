@@ -137,7 +137,7 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 				final List<ArgumentNode> argumentNodes = new LinkedList<>();
 
 				final StringBuilder signature = new StringBuilder();
-				signature.append(methodNode.getReturnNode().getJavaType()).append(' ')
+				signature.append(methodNode.getJavaType()).append(' ')
 						.append(methodNode.getIdentifier()).append(" (");
 				final List<ParameterNode> parameterNodes = methodNode.getParameterNodes();
 				if (parameterNodes != null) {
@@ -154,11 +154,10 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 				final Method m = Method.getMethod(signature.toString());
 				final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
 
-				final Context context = new Context(mg, argumentNodes, definedMethods);
+				final Context context = new Context(mg, argumentNodes, definedMethods, methodNode.getReturnType());
 
 				methodNode.getBodyNode().process(context);
 
-				methodNode.getReturnNode().process(context);
 				mg.endMethod();
 				mg.visitEnd();
 
@@ -175,7 +174,7 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		final List<ArgumentNode> argumentNodes = new LinkedList<>();
 		argumentNodes.add(new ArgumentNode("args", 0));
 
-		final Context context = new Context(mg, argumentNodes, definedMethods);
+		final Context context = new Context(mg, argumentNodes, definedMethods, Type.VOID_TYPE);
 		/*
 			en este caso en particular, el contexto debería de tener sólo args como argumento,
 			pero este bodyNode no va a necesitarlo, pues el programador no espera recibir argumentos por esta variable

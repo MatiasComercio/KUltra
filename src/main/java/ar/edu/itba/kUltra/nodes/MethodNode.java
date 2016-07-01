@@ -1,22 +1,32 @@
 package ar.edu.itba.kUltra.nodes;
 
 import ar.edu.itba.kUltra.helpers.Context;
+import ar.edu.itba.kUltra.helpers.TypeConverter;
+import org.objectweb.asm.Type;
 
 import java.util.List;
 
 public class MethodNode implements Node {
+	private final String javaType;
+	private final Type returnType;
 	private final String identifier;
 	private final List<ParameterNode> parameterNodes;
 	private final BodyNode bodyNode;
-	private final ReturnNode returnNode;
 
-	public MethodNode(final String identifier,
-	                  final List<ParameterNode> parameterNodes, final BodyNode bodyNode,
-	                  final ReturnNode returnNode) {
+	public MethodNode(final String returnType, final String identifier, final List<ParameterNode> parameterNodes, final BodyNode bodyNode) {
+		this.javaType = TypeConverter.getJavaTypeString(returnType);
+		this.returnType = TypeConverter.getType(returnType);
 		this.identifier = identifier;
 		this.parameterNodes = parameterNodes;
 		this.bodyNode = bodyNode;
-		this.returnNode = returnNode;
+	}
+
+	public String getJavaType() {
+		return javaType;
+	}
+
+	public Type getReturnType() {
+		return returnType;
 	}
 
 	public String getIdentifier() {
@@ -31,10 +41,6 @@ public class MethodNode implements Node {
 		return bodyNode;
 	}
 
-	public ReturnNode getReturnNode() {
-		return returnNode;
-	}
-
 	@Override
 	public void process(final Context context) { // +++ximprove: not used currently; have to improve Context class
 //		final List<ArgumentNode> argumentNodes = new LinkedList<>();
@@ -45,7 +51,7 @@ public class MethodNode implements Node {
 //		if (parameterNodes != null) {
 //			int position = 0;
 //			for (ParameterNode parameterNode : parameterNodes) {
-//				signature.append(parameterNode.getType()).append(", ");
+//				signature.append(parameterNode.getReturnType()).append(", ");
 //
 //				argumentNodes.add(new ArgumentNode(parameterNode.getIdentifier(), position));
 //			}
