@@ -133,43 +133,39 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 	private void generateAuxiliaryMethods(final ClassWriter cw, final DefinedMethods definedMethods) {
 		// +++ximprove
 		if (methodNodes != null) {
-			for (MethodNode methodNode : methodNodes) {
-				consumerAction(methodNode, cw, definedMethods);
-			}
+			methodNodes.forEach(methodNode -> {
+				final List<ArgumentNode> argumentNodes = new LinkedList<>();
+
+				final StringBuilder signature = new StringBuilder();
+				signature.append(methodNode.getReturnNode().getJavaType()).append(' ')
+						.append(methodNode.getIdentifier()).append(" (");
+				final List<ParameterNode> parameterNodes = methodNode.getParameterNodes();
+				if (parameterNodes != null) {
+					int position = 0;
+					for (ParameterNode parameterNode : parameterNodes) {
+						signature.append(parameterNode.getType()).append(", ");
+
+						argumentNodes.add(new ArgumentNode(parameterNode.getIdentifier(), position));
+					}
+				}
+
+				signature.append(")");
+
+				final Method m = Method.getMethod(signature.toString());
+				final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
+
+				final Context context = new Context(mg, argumentNodes, definedMethods);
+
+				methodNode.getBodyNode().process(context);
+
+				methodNode.getReturnNode().process(context);
+				mg.endMethod();
+				mg.visitEnd();
+
+				definedMethods.put(methodNode.getIdentifier(),
+						new MethodSymbol(methodNode.getIdentifier(), signature.toString()));
+			});
 		}
-	}
-
-	private void consumerAction(final MethodNode methodNode, final ClassWriter cw, final DefinedMethods definedMethods) {
-		final List<ArgumentNode> argumentNodes = new LinkedList<>();
-
-		final StringBuilder signature = new StringBuilder();
-		signature.append(methodNode.getReturnNode().getJavaType()).append(' ')
-				.append(methodNode.getIdentifier()).append(" (");
-		final List<ParameterNode> parameterNodes = methodNode.getParameterNodes();
-		if (parameterNodes != null) {
-			int position = 0;
-			for (ParameterNode parameterNode : parameterNodes) {
-				signature.append(parameterNode.getType()).append(", ");
-
-				argumentNodes.add(new ArgumentNode(parameterNode.getIdentifier(), position));
-			}
-		}
-
-		signature.append(")");
-
-		final Method m = Method.getMethod(signature.toString());
-		final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
-
-		final Context context = new Context(mg, argumentNodes, definedMethods);
-
-		methodNode.getBodyNode().process(context);
-
-		methodNode.getReturnNode().process(context);
-		mg.endMethod();
-		mg.visitEnd();
-
-		definedMethods.put(methodNode.getIdentifier(),
-				new MethodSymbol(methodNode.getIdentifier(), signature.toString()));
 	}
 
 	private void generateMainMethod(final ClassWriter cw, final DefinedMethods definedMethods) {

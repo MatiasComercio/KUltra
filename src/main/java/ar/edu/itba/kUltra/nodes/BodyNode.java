@@ -15,8 +15,8 @@ public class BodyNode implements Node {
 	public void process(final Context context) {
 		/* acá tendria que entrar con el contexto, para saber las variables y el orden */
 
-		for (StatementNode statementNode : statementNodes) {
+		statementNodes.forEach(statementNode -> {
 			statementNode.process(context);
-		}
+		});
 	}
 }

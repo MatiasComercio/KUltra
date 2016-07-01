@@ -9,6 +9,7 @@ import org.objectweb.asm.commons.Method;
 
 import java.util.*;
 
+import static org.objectweb.asm.Opcodes.*;
 import static org.objectweb.asm.Opcodes.IRETURN;
 import static org.objectweb.asm.Opcodes.RETURN;
 
@@ -43,12 +44,11 @@ public class Context {
 		this.argumentNodes = new HashMap<>();
 
 		if (argumentNodes != null) {
-			String aName;
-			for (ArgumentNode argumentNode : argumentNodes) {
-				aName = argumentNode.getName();
+			argumentNodes.forEach(argumentNode -> {
+				final String aName = argumentNode.getName();
 				this.argumentNodes.put(aName, argumentNode);
 				this.definedVariablesName.add(aName);
-			}
+			});
 		}
 
 		this.indexedVariableNodes = new HashMap<>();
@@ -130,9 +130,7 @@ public class Context {
 
 		// load requested variables, in the given order
 		if (argumentNodes != null) {
-			for (ExpressionNode argumentNode : argumentNodes) {
-				argumentNode.process(this);
-			}
+			argumentNodes.forEach(argumentNode -> argumentNode.process(this));
 		}
 
 		// do the actual call
