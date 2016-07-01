@@ -3,7 +3,7 @@ package ar.edu.itba.kUltra.nodes;
 import ar.edu.itba.kUltra.helpers.Context;
 import org.objectweb.asm.Type;
 
-public class ArithmeticNode implements ExpressionNode { /* +++ximprove: one of both (or both) should be an expression */
+public class ArithmeticNode implements ExpressionNode {
 	private final int operation;
 
 	private final ExpressionNode v1;

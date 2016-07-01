@@ -55,69 +55,89 @@ precedence left LT, LTEQ, GT, GTEQ;
 precedence left EQEQ, NOTEQ;
 
 
-Program                 ::=             MethodList:ml StatementList:sl // {: RESULT = new ProgramNode(ml, sl); :}
+Program                 ::=             MethodList:ml StatementList:sl {: RESULT = new ProgramNode(ml, sl); :}
                                         ;
 
 
-MethodList              ::=             Method:m MethodList:ml // {: RESULT = ml; ml.add(m); :}
-                                        | /* lambda */ // {: RESULT = new LinkedList<>(); :}
+MethodList              ::=             Method:m MethodList:ml {: RESULT = ml; ml.add(m); :}
+                                        | /* lambda */ {: RESULT = new NodeList(); :}
                                         ;
 
-Method                  ::=             DEF Type:t IDENTIFIER:i LPAREN Parameters:p RPAREN COLON StatementList:sl Return:r END
-                    // {: RESULT = new MethodNode("helloWorld", null, helloWorldBodyNode, new ReturnNode(t, p)); :}
+Method                  ::=             DEF Type:t IDENTIFIER:i LPAREN Parameters:p RPAREN COLON StatementList:sl END
+                     {: RESULT = new MethodNode(t, i, p, sl); :}
                                         ;
 
-Return                  ::=             RETURN Expression SEMICOLON;
-
-Parameters              ::=             Type IDENTIFIER:i COMMA Parameters| Type IDENTIFIER:i | /* lambda */ ;
-
-Type                    ::=             INT | STR;
-
-
-StatementList           ::=             Statement:s StatementList:sl // {: RESULT = sl; sl.add(s); :}
-                                        | /* lambda */ // {: RESULT = new NodeList(); :}
+Return                  ::=             RETURN Expression:e SEMICOLON {: RESULT = new ReturnNode(e); :}
                                         ;
 
-Statement               ::=             VarDeclaration | Assignment | If | While | MethodCall ;
+Parameters              ::=             Type:t IDENTIFIER:i COMMA Parameters:p {: RESULT = p; p.add(new ParameterNode(t, i)); :}
+                                        | Type IDENTIFIER:i {: RESULT = new ParameterNode(t, i); :}
+                                        | /* lambda */ {: RESULT = new NodeList(); :}
+                                        ;
 
-Expression              ::=             Expression:e1 MINUS Expression:e2
-                                        | Expression:e1 PLUS Expression:e2
-                                        | Expression:e1 MULT Expression:e2
-                                        | Expression:e1 DIV Expression:e2
-                                        | Expression:e1 MOD Expression:e2
-                                        | Expression:e1 AND Expression:e2
-                                        | Expression:e1 OR Expression:e2
-                                        | Expression:e1 LT Expression:e2
-                                        | Expression:e1 LTEQ Expression:e2
-                                        | Expression:e1 GT Expression:e2
-                                        | Expression:e1 GTEQ Expression:e2
-                                        | Expression:e1 EQEQ Expression:e2
-                                        | Expression:e1 NOTEQ Expression:e2
-                                        | MINUS Expression:e
-                                        | LPAREN Expression:e2 RPAREN
-                                        | MethodCall
-                                        | Literal 
-                                        | Variable ;
+Type                    ::=             INT {: RESULT ="int"; :}
+                                        | STR {: RESULT ="str"; :}
+                                        ;
+
+StatementList           ::=             Statement:s StatementList:sl  {: RESULT = sl; sl.add(s); :}
+                                        | /* lambda */ {: RESULT = new NodeList(); :}
+                                        ;
+
+Statement               ::=             VarDeclaration:vd {: RESULT = vd; :}
+                                        | Assignment:a {: RESULT = a; :}
+                                        | If:i {: RESULT = i; :}
+                                        | While:w {: RESULT = w; :}
+                                        | MethodCall:mc {: RESULT = mc; :}
+                                        ;
+
+Expression              ::=             Expression:e1 MINUS Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, e1, e2); :}
+                                        | Expression:e1 PLUS Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.ADD, e1, e2); :}
+                                        | Expression:e1 MULT Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.MUL, e1, e2); :}
+                                        | Expression:e1 DIV Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.DIV, e1, e2); :}
+                                        | Expression:e1 MOD Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.REM, e1, e2); :}
+                                        | Expression:e1 AND Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.AND, e1, e2); :}
+                                        | Expression:e1 OR Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.OR, e1, e2); :}
+                                        | Expression:e1 LT Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.LT, e1, e2); :}
+                                        | Expression:e1 LTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.LE, e1, e2); :}
+                                        | Expression:e1 GT Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.GT, e1, e2); :}
+                                        | Expression:e1 GTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.GE, e1, e2); :}
+                                        | Expression:e1 EQEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.EQ, e1, e2); :}
+                                        | Expression:e1 NOTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.NE, e1, e2); :}
+                                        | MINUS Expression:e {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e2); :}
+                                        | LPAREN Expression:e RPAREN {: RESULT = e; :}
+                                        | MethodCall:mc {: RESULT = mc; :}
+                                        | Literal:l {: RESULT = l; :}
+                                        | Variable:v {: RESULT = v; :}
+                                        ;
 
 
-Variable                ::=             IDENTIFIER;
+Variable                ::=             IDENTIFIER:i {: RESULT = new VariableNode(i); :}
+                                        ;
 
-VarDeclaration          ::=             Type IDENTIFIER:i SEMICOLON ;
+VarDeclaration          ::=             Type:t IDENTIFIER:i SEMICOLON {: RESULT = new DeclarationNode(t, i); :}
+                                        ;
 
-Assignment              ::=             IDENTIFIER:i EQ Expression SEMICOLON ;
+Assignment              ::=             IDENTIFIER:i EQ Expression:e SEMICOLON {: RESULT = new AssignmentNode(i, e); :}
+                                        ;
 
-If                      ::=             IF LPAREN Expression RPAREN COLON StatementList END 
+If                      ::=             IF LPAREN Expression:c RPAREN COLON StatementList:sl END {: RESULT = new IfNode(c, sl, null); :}
                                         |
-                                        IF LPAREN Expression RPAREN COLON StatementList ELSE COLON StatementList END ;
+                                        IF LPAREN Expression:c RPAREN COLON StatementList:sl ELSE COLON StatementList:el END {: RESULT = new IfNode(c, sl, el); :}
+                                        ;
 
-While                   ::=             WHILE LPAREN Expression RPAREN COLON StatementList END ;
+While                   ::=             WHILE LPAREN Expression:c RPAREN COLON StatementList:sl END {: RESULT = new WhileNode(c, sl); :}
+                                        ;
 
-MethodCall              ::=             IDENTIFIER:i LPAREN Arguments RPAREN SEMICOLON ;
+MethodCall              ::=             IDENTIFIER:i LPAREN Arguments:a RPAREN SEMICOLON {: RESULT = new MethodCallNode(i, a); :}
+                                        ;
 
-Arguments               ::=             Expression COMMA Arguments | Expression | /* lambda */ ;
+Arguments               ::=             IDENTIFIER:i COMMA Arguments:a {: RESULT = a; a.add(new ArgumentNode(i, a.size())); :}
+                                        | IDENTIFIER:i {: RESULT = new ArgumentNode(i, 0); :}
+                                        | /* lambda */ {: RESULT = new NodeList(); :}
+                                        ;
 
-Literal                 ::=             INTEGER:n 
+Literal                 ::=             INTEGER:n {: RESULT = new LiteralNode<>(n); :}
                                         |
-                                        STRING:s ;
+                                        STRING:s {: RESULT = new LiteralNode<>(s); :};
                                         
 
