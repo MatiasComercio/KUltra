@@ -1,6 +1,7 @@
 package ar.edu.itba.kUltra;
 
 import java_cup.runtime.*;
+import ar.edu.itba.kUltra.nodes.*;
 
 parser code {:
     Scanner scanner;
@@ -54,12 +55,17 @@ precedence left LT, LTEQ, GT, GTEQ;
 precedence left EQEQ, NOTEQ;
 
 
-Program                 ::=             MethodList StatementList;
+Program                 ::=             MethodList:ml StatementList:sl {: RESULT = new ProgramNode(ml, new BodyNode(sl)); :}
+                                        ;
 
 
-MethodList              ::=             Method MethodList | /* lambda */ ;
+MethodList              ::=             Method:m MethodList:ml {: RESULT = ml; ml.add(m); :}
+                                        | /* lambda */ {: RESULT = new LinkedList<>(); :}
+                                        ;
 
-Method                  ::=             DEF Type IDENTIFIER:i LPAREN Parameters RPAREN COLON StatementList Return END;
+Method                  ::=             DEF Type:t IDENTIFIER:i LPAREN Parameters:p RPAREN COLON StatementList:sl Return:r END
+                    {: RESULT = new MethodNode("helloWorld", null, helloWorldBodyNode, new ReturnNode(t, p)); :}
+                                        ;
 
 Return                  ::=             RETURN Expression SEMICOLON;
 
