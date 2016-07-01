@@ -1,0 +1,115 @@
+package ar.edu.itba.kUltra;
+
+import java_cup.runtime.*;
+
+parser code {:
+    Scanner scanner;
+
+  public Parser(Scanner scann, ComplexSymbolFactory sf) {
+    super(scann,sf);
+    scanner = scann;
+  }
+
+	public static void main(String args[]) throws Exception {
+		ComplexSymbolFactory sf = new ComplexSymbolFactory();
+		if (args.length==0) new Parser(new Scanner(System.in,sf),sf).parse();
+		else new Parser(new Scanner(new java.io.FileInputStream(args[0]),sf),sf).parse();
+	}
+:}
+
+terminal MINUS, PLUS, MULT, DIV, MOD;
+terminal AND, OR;
+terminal LT, LTEQ, GT, GTEQ, EQEQ, NOTEQ, EQ;
+terminal LPAREN, RPAREN;
+terminal SEMICOLON, COMMA, COLON;
+terminal INT, STR;
+terminal RETURN, DEF, END, IF, ELSE, WHILE;
+
+
+terminal Integer INTEGER;
+terminal String STRING, IDENTIFIER;
+
+
+non terminal Program;
+non terminal MethodList;
+non terminal Method;
+non terminal Return;
+non terminal Parameters;
+non terminal Type;
+non terminal StatementList;
+non terminal Statement;
+non terminal Expression;
+non terminal Variable;
+non terminal VarDeclaration;
+non terminal Assignment;
+non terminal If;
+non terminal While;
+non terminal MethodCall;
+non terminal Arguments;
+non terminal Literal;
+
+precedence left AND, OR;
+precedence left MINUS, PLUS, MULT, DIV, MOD;
+precedence left LT, LTEQ, GT, GTEQ;
+precedence left EQEQ, NOTEQ;
+
+
+Program                 ::=             MethodList StatementList;
+
+
+MethodList              ::=             Method MethodList | /* lambda */ ;
+
+Method                  ::=             DEF Type IDENTIFIER:i LPAREN Parameters RPAREN COLON StatementList Return END;
+
+Return                  ::=             RETURN Expression SEMICOLON;
+
+Parameters              ::=             Type IDENTIFIER:i COMMA Parameters| Type IDENTIFIER:i | /* lambda */ ;
+
+Type                    ::=             INT | STR;
+
+
+StatementList           ::=             Statement StatementList | /* lambda */ ;
+
+Statement               ::=             VarDeclaration | Assignment | If | While | MethodCall ;
+
+Expression              ::=             Expression:e1 MINUS Expression:e2
+                                        | Expression:e1 PLUS Expression:e2
+                                        | Expression:e1 MULT Expression:e2
+                                        | Expression:e1 DIV Expression:e2
+                                        | Expression:e1 MOD Expression:e2
+                                        | Expression:e1 AND Expression:e2
+                                        | Expression:e1 OR Expression:e2
+                                        | Expression:e1 LT Expression:e2
+                                        | Expression:e1 LTEQ Expression:e2
+                                        | Expression:e1 GT Expression:e2
+                                        | Expression:e1 GTEQ Expression:e2
+                                        | Expression:e1 EQEQ Expression:e2
+                                        | Expression:e1 NOTEQ Expression:e2
+                                        | MINUS Expression:e
+                                        | LPAREN Expression:e2 RPAREN
+                                        | MethodCall
+                                        | Literal 
+                                        | Variable ;
+
+
+Variable                ::=             IDENTIFIER;
+
+VarDeclaration          ::=             Type IDENTIFIER:i SEMICOLON ;
+
+Assignment              ::=             IDENTIFIER:i EQ Expression SEMICOLON ;
+
+If                      ::=             IF LPAREN Expression RPAREN COLON StatementList END 
+                                        |
+                                        IF LPAREN Expression RPAREN COLON StatementList ELSE COLON StatementList END ;
+
+While                   ::=             WHILE LPAREN Expression RPAREN COLON StatementList END ;
+
+MethodCall              ::=             IDENTIFIER:i LPAREN Arguments RPAREN SEMICOLON ;
+
+Arguments               ::=             Expression COMMA Arguments | Expression | /* lambda */ ;
+
+Literal                 ::=             INTEGER:n 
+                                        |
+                                        STRING:s ;
+                                        
+

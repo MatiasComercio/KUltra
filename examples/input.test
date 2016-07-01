@@ -1,0 +1,21 @@
+#comment
+def int func(int arg1, int arr):
+    int hola;
+    hola = 1;
+    return 0;
+end
+
+int a;
+a = 2;
+
+puts("hola que tal");
+
+if (a == 2):
+    puts("a es igual a 2");
+end
+
+while (a != 0):
+   puts("a no es 0");
+end
+
+puts("a es 0");
