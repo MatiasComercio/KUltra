@@ -27,14 +27,14 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 	/**
 	 * Methods that were defined at the top, but were not processed yet, and that will be used on this program
 	 */
-	private final List<MethodNode> methodNodes;
+	private final NodeList methodNodes;
 
 	/**
 	 * Body that was defined at the bottom, that conforms the actual program
 	 */
 	private final BodyNode bodyNode;
 
-	public ProgramNode(final List<MethodNode> methodNodes, final BodyNode bodyNode) {
+	public ProgramNode(final NodeList methodNodes, final BodyNode bodyNode) {
 		this.methodNodes = methodNodes;
 		this.bodyNode = bodyNode;
 	}
@@ -131,39 +131,10 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 	}
 
 	private void generateAuxiliaryMethods(final ClassWriter cw, final DefinedMethods definedMethods) {
-		// +++ximprove
+
+		final Context context = new Context(cw, null, null, definedMethods, null); /* +++ximprove: works, but it is not cool */
 		if (methodNodes != null) {
-			methodNodes.forEach(methodNode -> {
-				final List<ArgumentNode> argumentNodes = new LinkedList<>();
-
-				final StringBuilder signature = new StringBuilder();
-				signature.append(methodNode.getJavaType()).append(' ')
-						.append(methodNode.getIdentifier()).append(" (");
-				final List<ParameterNode> parameterNodes = methodNode.getParameterNodes();
-				if (parameterNodes != null) {
-					int position = 0;
-					for (ParameterNode parameterNode : parameterNodes) {
-						signature.append(parameterNode.getType()).append(", ");
-
-						argumentNodes.add(new ArgumentNode(parameterNode.getIdentifier(), position));
-					}
-				}
-
-				signature.append(")");
-
-				final Method m = Method.getMethod(signature.toString());
-				final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
-
-				final Context context = new Context(mg, argumentNodes, definedMethods, methodNode.getReturnType());
-
-				methodNode.getBodyNode().process(context);
-
-				mg.endMethod();
-				mg.visitEnd();
-
-				definedMethods.put(methodNode.getIdentifier(),
-						new MethodSymbol(methodNode.getIdentifier(), signature.toString()));
-			});
+			methodNodes.process(context);
 		}
 	}
 
@@ -174,7 +145,7 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		final List<ArgumentNode> argumentNodes = new LinkedList<>();
 		argumentNodes.add(new ArgumentNode("args", 0));
 
-		final Context context = new Context(mg, argumentNodes, definedMethods, Type.VOID_TYPE);
+		final Context context = new Context(cw, mg, argumentNodes, definedMethods, Type.VOID_TYPE);
 		/*
 			en este caso en particular, el contexto debería de tener sólo args como argumento,
 			pero este bodyNode no va a necesitarlo, pues el programador no espera recibir argumentos por esta variable

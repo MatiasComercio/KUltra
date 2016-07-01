@@ -14,8 +14,7 @@ public class TestNodes {
 		programNode.compileAs("TestNodes");
 	}
 
-	private static List<MethodNode> generateMethods() {
-
+	private static NodeList generateMethods() {
 
 		final List<StatementNode> helloWorldStatementNodes = new LinkedList<>();
 		helloWorldStatementNodes.add(new MethodCallNode("puts",
@@ -25,7 +24,7 @@ public class TestNodes {
 
 		final MethodNode helloWorldMethodNode = new MethodNode("void", "helloWorld", null, helloWorldBodyNode);
 
-		final List<MethodNode> methodNodes = new LinkedList<>();
+		final NodeList methodNodes = new NodeList();
 		methodNodes.add(helloWorldMethodNode);
 		return methodNodes;
 	}

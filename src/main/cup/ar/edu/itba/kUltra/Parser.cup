@@ -55,7 +55,7 @@ precedence left LT, LTEQ, GT, GTEQ;
 precedence left EQEQ, NOTEQ;
 
 
-Program                 ::=             MethodList:ml StatementList:sl // {: RESULT = new ProgramNode(ml, new BodyNode(sl)); :}
+Program                 ::=             MethodList:ml StatementList:sl // {: RESULT = new ProgramNode(ml, sl); :}
                                         ;
 
 
@@ -74,7 +74,9 @@ Parameters              ::=             Type IDENTIFIER:i COMMA Parameters| Type
 Type                    ::=             INT | STR;
 
 
-StatementList           ::=             Statement StatementList | /* lambda */ ;
+StatementList           ::=             Statement:s StatementList:sl // {: RESULT = sl; sl.add(s); :}
+                                        | /* lambda */ // {: RESULT = new NodeList(); :}
+                                        ;
 
 Statement               ::=             VarDeclaration | Assignment | If | While | MethodCall ;
 

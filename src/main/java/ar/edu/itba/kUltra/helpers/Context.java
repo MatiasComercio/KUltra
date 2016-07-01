@@ -1,6 +1,8 @@
 package ar.edu.itba.kUltra.helpers;
 
 import ar.edu.itba.kUltra.nodes.*;
+import ar.edu.itba.kUltra.symbols.MethodSymbol;
+import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
@@ -9,13 +11,14 @@ import org.objectweb.asm.commons.Method;
 
 import java.util.*;
 
-import static org.objectweb.asm.Opcodes.IRETURN;
-import static org.objectweb.asm.Opcodes.RETURN;
+import static org.objectweb.asm.Opcodes.*;
 
 /**
  * This class manages the variables of a method - both args and local variables
  */
 public class Context {
+
+	private final ClassWriter cw;
 
 	private final GeneratorAdapter mg;
 
@@ -26,13 +29,13 @@ public class Context {
 	private final Map<String, ArgumentNode> argumentNodes;
 
 	private final Type returnType;
-
 	/**
 	 * Stores VariableNodes, and when saved, it assigns an index corresponding to the local variable
 	 */
 	private final Map<String, Integer> indexedVariableNodes;
 
-	public Context(final GeneratorAdapter mg, final List<ArgumentNode> argumentNodes, final DefinedMethods definedMethods, final Type returnType) {
+	public Context(final ClassWriter cw, final GeneratorAdapter mg, final List<ArgumentNode> argumentNodes, final DefinedMethods definedMethods, final Type returnType) {
+		this.cw = cw;
 		this.mg = mg;
 
 		if (definedMethods == null) {
@@ -267,19 +270,20 @@ public class Context {
 
 	}
 
-	public void createMethod(final String signature, final List<ArgumentNode> argumentNodes,
-	                         final BodyNode bodyNode, final ReturnNode returnNode) { // +++ximprove
-//		final Method m = Method.getMethod(signature);
-//		final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
-//
-//		final Context context = new Context(mg, argumentNodes, definedMethods);
-//
-//		bodyNode.process(context);
-//
-//		/* +++xtodo: do sth with returnNode */
-//		mg.returnValue();
-//		mg.endMethod();
-//		mg.visitEnd();
+	public void createMethod(final String identifier, final String signature, final List<ArgumentNode> argumentNodes,
+	                         final BodyNode bodyNode, final Type returnType) {
+		final Method m = Method.getMethod(signature);
+		final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
+
+		final Context context = new Context(cw, mg, argumentNodes, definedMethods, returnType);
+
+		bodyNode.process(context);
+
+		mg.endMethod();
+		mg.visitEnd();
+
+		definedMethods.put(identifier,
+				new MethodSymbol(identifier, signature));
 	}
 
 
