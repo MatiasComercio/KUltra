@@ -30,4 +30,13 @@ public class ArithmeticNode implements ExpressionNode {
 //		/* +++xdebug */
 //		context.push(3);
 	}
+
+	@Override
+	public String toString() {
+		return "ArithmeticNode{" +
+				"operation=" + operation +
+				", v1=" + v1 +
+				", v2=" + v2 +
+				'}';
+	}
 }

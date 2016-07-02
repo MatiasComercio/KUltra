@@ -23,4 +23,12 @@ public class WhileNode implements StatementNode {
 	public void process(final Context context) {
 		context.whileProcess(condition, bodyNode);
 	}
+
+	@Override
+	public String toString() {
+		return "WhileNode{" +
+				"condition=" + condition +
+				", bodyNode=" + bodyNode +
+				'}';
+	}
 }

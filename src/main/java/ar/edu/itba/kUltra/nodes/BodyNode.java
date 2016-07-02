@@ -26,4 +26,11 @@ public class BodyNode implements Node {
 			statementNode.process(context);
 		});
 	}
+
+	@Override
+	public String toString() {
+		return "BodyNode{" +
+				"statementNodes=" + statementNodes +
+				'}';
+	}
 }

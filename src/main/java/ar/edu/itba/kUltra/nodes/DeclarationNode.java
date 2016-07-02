@@ -17,4 +17,12 @@ public class DeclarationNode implements StatementNode {
 	public void process(final Context context) {
 		context.setVariable(type, identifier);
 	}
+
+	public Type getType() {
+		return type;
+	}
+
+	public String getIdentifier() {
+		return identifier;
+	}
 }

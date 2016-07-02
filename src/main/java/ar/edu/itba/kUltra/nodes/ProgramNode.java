@@ -205,4 +205,12 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 			System.out.println("Could not write '" + className + ".class' file");
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "ProgramNode{" +
+				"methodNodes=" + methodNodes +
+				", bodyNode=" + bodyNode +
+				'}';
+	}
 }

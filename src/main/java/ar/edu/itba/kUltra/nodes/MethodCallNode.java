@@ -19,4 +19,12 @@ public class MethodCallNode implements StatementNode, ExpressionNode {
 	public void process(final Context context) {
 		context.methodCall(identifier, arguments);
 	}
+
+	@Override
+	public String toString() {
+		return "MethodCallNode{" +
+				"identifier='" + identifier + '\'' +
+				", arguments=" + arguments +
+				'}';
+	}
 }

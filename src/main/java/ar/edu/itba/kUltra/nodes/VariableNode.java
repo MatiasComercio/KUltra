@@ -34,4 +34,11 @@ public class VariableNode implements ExpressionNode {
 	public void process(final Context context) {
 		context.loadVariable(this);
 	}
+
+	@Override
+	public String toString() {
+		return "VariableNode{" +
+				"name='" + name + '\'' +
+				'}';
+	}
 }

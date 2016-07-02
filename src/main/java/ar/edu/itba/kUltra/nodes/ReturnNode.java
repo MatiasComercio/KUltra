@@ -23,4 +23,11 @@ public class ReturnNode implements StatementNode {
 		}
 		context.returnProcess();
 	}
+
+	@Override
+	public String toString() {
+		return "ReturnNode{" +
+				"e=" + e +
+				'}';
+	}
 }

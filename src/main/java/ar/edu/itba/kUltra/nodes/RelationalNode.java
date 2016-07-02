@@ -38,4 +38,13 @@ public class RelationalNode implements ExpressionNode {
 		// +++xmagicnumber
 		context.conditionOp(Type.INT_TYPE, operation); // +++xcheck: is Type necessary?
 	}
+
+	@Override
+	public String toString() {
+		return "RelationalNode{" +
+				"operation=" + operation +
+				", e1=" + e1 +
+				", e2=" + e2 +
+				'}';
+	}
 }

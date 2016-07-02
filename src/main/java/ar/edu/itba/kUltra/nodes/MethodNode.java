@@ -56,4 +56,15 @@ public class MethodNode implements Node {
 
 		context.createMethod(identifier, signature.toString(), parameterListSymbol, bodyNode, returnType);
 	}
+
+	@Override
+	public String toString() {
+		return "MethodNode{" +
+				"javaType='" + javaType + '\'' +
+				", returnType=" + returnType +
+				", identifier='" + identifier + '\'' +
+				", parameterListSymbol=" + parameterListSymbol +
+				", bodyNode=" + bodyNode +
+				'}';
+	}
 }

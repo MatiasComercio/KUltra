@@ -33,4 +33,11 @@ public class LiteralNode<T> implements ExpressionNode {
 
 		throw new IllegalArgumentException("Not a valid type");
 	}
+
+	@Override
+	public String toString() {
+		return "LiteralNode{" +
+				"value=" + value +
+				'}';
+	}
 }

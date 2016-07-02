@@ -20,4 +20,11 @@ public class NodeList<T extends Node> implements Node {
 	public void process(final Context context) {
 		nodeList.forEach(node -> node.process(context));
 	}
+
+	@Override
+	public String toString() {
+		return "NodeList{" +
+				"nodeList=" + nodeList +
+				'}';
+	}
 }

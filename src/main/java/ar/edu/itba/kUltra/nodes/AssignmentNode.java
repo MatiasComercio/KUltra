@@ -27,4 +27,12 @@ public class AssignmentNode implements StatementNode {
 		/* the result is at the stack => save it on the given identifier */
 		context.assignTo(identifier);
 	}
+
+	@Override
+	public String toString() {
+		return "AssignmentNode{" +
+				"identifier='" + identifier + '\'' +
+				", expressionNode=" + expressionNode +
+				'}';
+	}
 }

@@ -29,4 +29,13 @@ public class IfNode implements StatementNode {
 	public void process(final Context context) {
 		context.ifProcess(condition, bodyNode, elseBodyNode);
 	}
+
+	@Override
+	public String toString() {
+		return "IfNode{" +
+				"condition=" + condition +
+				", bodyNode=" + bodyNode +
+				", elseBodyNode=" + elseBodyNode +
+				'}';
+	}
 }
