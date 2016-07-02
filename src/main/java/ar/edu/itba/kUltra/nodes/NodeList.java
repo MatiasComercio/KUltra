@@ -6,22 +6,22 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class NodeList implements Node {
-	private final List<Node> nodeList;
+public class NodeList<T extends Node> implements Node {
+	private final List<T> nodeList;
 
 	public NodeList() {
 		nodeList = new LinkedList<>();
 	}
 
-	public boolean add(final Node node) {
+	public boolean add(final T node) {
 		return nodeList.add(node);
 	}
 
-	public boolean addAll(final Collection<Node> c) {
+	public boolean addAll(final Collection<T> c) {
 		return nodeList.addAll(c);
 	}
 
-	public List<Node> getNodeList() {
+	public List<T> getNodeList() {
 		return nodeList;
 	}
 

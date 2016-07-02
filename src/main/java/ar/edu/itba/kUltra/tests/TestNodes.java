@@ -1,6 +1,7 @@
 package ar.edu.itba.kUltra.tests;
 
 import ar.edu.itba.kUltra.nodes.*;
+import ar.edu.itba.kUltra.symbols.ParameterListSymbol;
 import org.objectweb.asm.commons.GeneratorAdapter;
 
 import java.util.LinkedList;
@@ -22,9 +23,9 @@ public class TestNodes {
 		helloWorldStatementNodes.add(new ReturnNode(null));
 		final BodyNode helloWorldBodyNode = new BodyNode(helloWorldStatementNodes);
 
-		final MethodNode helloWorldMethodNode = new MethodNode("void", "helloWorld", null, helloWorldBodyNode);
+		final MethodNode helloWorldMethodNode = new MethodNode("void", "helloWorld", new ParameterListSymbol(), helloWorldBodyNode);
 
-		final NodeList methodNodes = new NodeList();
+		final NodeList<MethodNode> methodNodes = new NodeList<>();
 		methodNodes.add(helloWorldMethodNode);
 		return methodNodes;
 	}
@@ -57,7 +58,7 @@ public class TestNodes {
 		statementNodes.add(assignmentNode);
 
 		final VariableNode i = new VariableNode("i");
-		final List<ExpressionNode> argumentNodes = new LinkedList<>();
+		final NodeList<ExpressionNode> argumentNodes = new NodeList<>();
 		argumentNodes.add(i);
 		final MethodCallNode putsMethod = new MethodCallNode("puts", argumentNodes);
 		statementNodes.add(putsMethod);
@@ -125,14 +126,14 @@ public class TestNodes {
 		statementNodes.add(new MethodCallNode("puts", putsArgument("\n")));
 	}
 
-	private static List<ExpressionNode> putsArgument(final Object o) {
-		final List<ExpressionNode> argumentNodes = new LinkedList<>();
+	private static NodeList<ExpressionNode> putsArgument(final Object o) {
+		final NodeList<ExpressionNode> argumentNodes = new NodeList<>();
 		argumentNodes.add(new LiteralNode<>(o));
 		return argumentNodes;
 	}
 
-	private static List<ExpressionNode> putsArgument(final VariableNode variableNode) {
-		final List<ExpressionNode> argumentNodes = new LinkedList<>();
+	private static NodeList<ExpressionNode> putsArgument(final VariableNode variableNode) {
+		final NodeList<ExpressionNode> argumentNodes = new NodeList<>();
 		argumentNodes.add(variableNode);
 		return argumentNodes;
 	}

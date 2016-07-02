@@ -3,6 +3,7 @@ package ar.edu.itba.kUltra.nodes;
 import ar.edu.itba.kUltra.helpers.Context;
 import ar.edu.itba.kUltra.helpers.DefinedMethods;
 import ar.edu.itba.kUltra.symbols.MethodSymbol;
+import ar.edu.itba.kUltra.symbols.ParameterListSymbol;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Type;
@@ -142,10 +143,10 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		final Method m = Method.getMethod(MAIN_METHOD_SIGNATURE);
 		final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
 
-		final List<ArgumentNode> argumentNodes = new LinkedList<>();
-		argumentNodes.add(new ArgumentNode("args", 0));
+		final ParameterListSymbol parameterListSymbol = new ParameterListSymbol();
+		parameterListSymbol.addParameter("String[]", "args");
 
-		final Context context = new Context(cw, mg, argumentNodes, definedMethods, Type.VOID_TYPE);
+		final Context context = new Context(cw, mg, parameterListSymbol, definedMethods, Type.VOID_TYPE);
 		/*
 			en este caso en particular, el contexto debería de tener sólo args como argumento,
 			pero este bodyNode no va a necesitarlo, pues el programador no espera recibir argumentos por esta variable

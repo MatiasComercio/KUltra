@@ -2,29 +2,22 @@ package ar.edu.itba.kUltra.nodes;
 
 import ar.edu.itba.kUltra.helpers.Context;
 import ar.edu.itba.kUltra.helpers.TypeConverter;
-import ar.edu.itba.kUltra.symbols.MethodSymbol;
+import ar.edu.itba.kUltra.symbols.ParameterListSymbol;
+import com.sun.istack.internal.NotNull;
 import org.objectweb.asm.Type;
-import org.objectweb.asm.commons.GeneratorAdapter;
-import org.objectweb.asm.commons.Method;
-
-import java.util.LinkedList;
-import java.util.List;
-
-import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
-import static org.objectweb.asm.Opcodes.ACC_STATIC;
 
 public class MethodNode implements Node {
 	private final String javaType;
 	private final Type returnType;
 	private final String identifier;
-	private final List<ParameterNode> parameterNodes;
+	private final ParameterListSymbol parameterListSymbol;
 	private final BodyNode bodyNode;
 
-	public MethodNode(final String returnType, final String identifier, final List<ParameterNode> parameterNodes, final BodyNode bodyNode) {
+	public MethodNode(final String returnType, final String identifier, @NotNull final ParameterListSymbol parameterListSymbol, final BodyNode bodyNode) {
 		this.javaType = TypeConverter.getJavaTypeString(returnType);
 		this.returnType = TypeConverter.getType(returnType);
 		this.identifier = identifier;
-		this.parameterNodes = parameterNodes;
+		this.parameterListSymbol = parameterListSymbol;
 		this.bodyNode = bodyNode;
 	}
 
@@ -40,8 +33,8 @@ public class MethodNode implements Node {
 		return identifier;
 	}
 
-	public List<ParameterNode> getParameterNodes() {
-		return parameterNodes;
+	public ParameterListSymbol getParameterListSymbol() {
+		return parameterListSymbol;
 	}
 
 	public BodyNode getBodyNode() {
@@ -50,22 +43,11 @@ public class MethodNode implements Node {
 
 	@Override
 	public void process(final Context context) {
-		final List<ArgumentNode> argumentNodes = new LinkedList<>();
-
 		final StringBuilder signature = new StringBuilder();
 		signature.append(javaType).append(' ')
-				.append(identifier).append(" (");
-		if (parameterNodes != null) {
-			int position = 0;
-			for (ParameterNode parameterNode : parameterNodes) {
-				signature.append(parameterNode.getType()).append(", ");
+				.append(identifier).append(' ')
+				.append("(").append(parameterListSymbol.toString()).append(")");
 
-				argumentNodes.add(new ArgumentNode(parameterNode.getIdentifier(), position));
-			}
-		}
-
-		signature.append(")");
-
-		context.createMethod(identifier, signature.toString(), argumentNodes, bodyNode, returnType);
+		context.createMethod(identifier, signature.toString(), parameterListSymbol, bodyNode, returnType);
 	}
 }

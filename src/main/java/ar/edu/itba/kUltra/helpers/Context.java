@@ -2,6 +2,7 @@ package ar.edu.itba.kUltra.helpers;
 
 import ar.edu.itba.kUltra.nodes.*;
 import ar.edu.itba.kUltra.symbols.MethodSymbol;
+import ar.edu.itba.kUltra.symbols.ParameterListSymbol;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.Opcodes;
@@ -26,7 +27,7 @@ public class Context {
 
 	private final Set<String> definedVariablesName;
 
-	private final Map<String, ArgumentNode> argumentNodes;
+	private final Map<String, ParameterListSymbol.ParameterSymbol> parameters;
 
 	private final Type returnType;
 	/**
@@ -34,7 +35,7 @@ public class Context {
 	 */
 	private final Map<String, Integer> indexedVariableNodes;
 
-	public Context(final ClassWriter cw, final GeneratorAdapter mg, final List<ArgumentNode> argumentNodes, final DefinedMethods definedMethods, final Type returnType) {
+	public Context(final ClassWriter cw, final GeneratorAdapter mg, final ParameterListSymbol parameterListSymbol, final DefinedMethods definedMethods, final Type returnType) {
 		this.cw = cw;
 		this.mg = mg;
 
@@ -45,12 +46,12 @@ public class Context {
 
 		this.definedVariablesName = new HashSet<>();
 
-		this.argumentNodes = new HashMap<>();
+		this.parameters = new HashMap<>();
 
-		if (argumentNodes != null) {
-			argumentNodes.forEach(argumentNode -> {
-				final String aName = argumentNode.getName();
-				this.argumentNodes.put(aName, argumentNode);
+		if (parameterListSymbol != null) {
+			parameterListSymbol.getParameterSymbols().forEach(parameterSymbol -> {
+				final String aName = parameterSymbol.getIdentifier();
+				this.parameters.put(aName, parameterSymbol);
 				this.definedVariablesName.add(aName);
 			});
 		}
@@ -94,7 +95,7 @@ public class Context {
 		}
 
 		// else, it was an argument, not a variable
-		int index = argumentNodes.get(identifier).getPosition();
+		int index = parameters.get(identifier).getPosition();
 		mg.loadArg(index);
 	}
 
@@ -113,7 +114,7 @@ public class Context {
 		}
 
 		// else, it was an argument, not a variable
-		int index = argumentNodes.get(identifier).getPosition();
+		int index = parameters.get(identifier).getPosition();
 		mg.storeArg(index);
 	}
 
@@ -128,15 +129,15 @@ public class Context {
 		storeFromStack(identifier);
 	}
 
-	public void methodCall(final String identifier, final List<ExpressionNode> argumentNodes) {
+	public void methodCall(final String identifier, final NodeList<ExpressionNode> arguments) {
 		// check if method exists
 		if (!definedMethods.containsKey(identifier)) {
 			throw new IllegalArgumentException("Method '" + identifier + "' is not defined");
 		}
 
 		// load requested variables, in the given order
-		if (argumentNodes != null) {
-			argumentNodes.forEach(argumentNode -> argumentNode.process(this));
+		if (arguments != null) {
+			arguments.process(this);
 		}
 
 		// do the actual call
@@ -270,7 +271,7 @@ public class Context {
 
 	}
 
-	public void createMethod(final String identifier, final String signature, final List<ArgumentNode> argumentNodes,
+	public void createMethod(final String identifier, final String signature, final ParameterListSymbol argumentNodes,
 	                         final BodyNode bodyNode, final Type returnType) {
 		final Method m = Method.getMethod(signature);
 		final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
