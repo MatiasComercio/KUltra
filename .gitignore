@@ -148,6 +148,7 @@ buildNumber.properties
 .mvn/timing.properties
 
 .idea/
-TestNodes.class
 src/main/java/ar/edu/itba/primer/
 tlatest.iml
+
+compiled/

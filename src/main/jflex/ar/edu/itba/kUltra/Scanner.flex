@@ -96,14 +96,14 @@ LineComment = "#" {CommentBody}
 {LineComment}                  { System.out.println("COMMENT> " + yytext()); /* ignore :) */ }
 {WhiteSpace}                   { /* ignore :) */ }
 {LineTerminator}               { /* ignore :) */ }
-{String}            		   { System.out.println("UN STRING"); return symbol("str", STRING, yytext()); } /* +++xcheck */
+{String}            		   { System.out.println("UN STRING"); return symbol("str", STRING, yytext().substring(1, yytext().length() - 1)); } // remove the quotes
 {Integer}           		   { System.out.println("IN ENTERO"); return symbol("int", INTEGER, Integer.valueOf(yytext())); }
 "def"                          { System.out.println("def"); return symbol("def", DEF); }
 "end"                          { System.out.println("end"); return symbol("end", END); }
 "if"                           { System.out.println("if"); return symbol("if", IF); }
 "else"                         { System.out.println("else"); return symbol("else", ELSE); }
 "while"                        { System.out.println("while"); return symbol("while", WHILE); }
-{Identifier}                   { System.out.println("identifier"); return symbol(yytext(), IDENTIFIER, yytext()); } /* +++xcheck */
+{Identifier}                   { System.out.println("identifier"); return symbol(yytext(), IDENTIFIER, yytext()); }
 
 /* error fallback */
 [^]                            { System.out.println("Illegal character <"+yytext()+">"); }
