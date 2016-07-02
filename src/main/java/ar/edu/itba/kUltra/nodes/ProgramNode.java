@@ -9,9 +9,12 @@ import org.objectweb.asm.Label;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import org.objectweb.asm.commons.Method;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.LinkedList;
@@ -22,6 +25,7 @@ import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
 
 public class ProgramNode /* +++xcheck: should implement Node? */ {
+	private static final Logger LOGGER = LoggerFactory.getLogger(ProgramNode.class);
 	private static final String OBJECT_INTERNAL_NAME = "java/lang/Object";
 	private static final String MAIN_METHOD_SIGNATURE = "void main (String[])";
 
@@ -199,8 +203,20 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		final File compileFolder = new File("compiled"); // +++xchange: do this with maven
 		compileFolder.mkdir();
 
+		/* delete previous .class file, if any */
+		final Path pathToFileClass = Paths.get("compiled", className + ".class");
 		try {
-			Files.write(Paths.get("compiled", className + ".class"), classBytes, StandardOpenOption.CREATE);
+			Files.deleteIfExists(pathToFileClass);
+		} catch (IOException e) {
+			LOGGER.warn("Could not delete previous .class file: '{}'. Caused by: ", pathToFileClass, e);
+			System.out.println("Could not delete previous .class file: '" + pathToFileClass + "'.\n" +
+					"So, new .class could not be saved. Aborting...");
+			return;
+		}
+
+		/* write the new .class file */
+		try {
+			Files.write(pathToFileClass, classBytes, StandardOpenOption.CREATE);
 		} catch (IOException e) {
 			System.out.println("Could not write '" + className + ".class' file");
 		}
