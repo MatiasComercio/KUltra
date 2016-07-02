@@ -51,7 +51,7 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		 */
 		final DefinedMethods definedMethods = new DefinedMethods(className);
 
-		generatePredefinedMethods(cw, definedMethods);
+		generatePredefinedMethods(cw, definedMethods, className);
 
 		generateAuxiliaryMethods(cw, definedMethods);
 
@@ -60,10 +60,44 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		generateClassFile(cw, className);
 	}
 
-	private void generatePredefinedMethods(final ClassWriter cw, final DefinedMethods definedMethods) {
+	private void generatePredefinedMethods(final ClassWriter cw, final DefinedMethods definedMethods, final String className) {
 
 		generateGetsMethod(cw, definedMethods);
+		generateGetiMethod(cw, definedMethods, className);
 		generatePutsMethod(cw, definedMethods);
+	}
+
+	/* Modified from ASMified code */
+	private void generateGetiMethod(final ClassWriter cw, final DefinedMethods definedMethods, final String className) {
+		final String methodName = "geti";
+		final String methodSignature = "Integer geti ()";
+		Method m = Method.getMethod(methodSignature);
+		final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
+		Label l0 = new Label();
+		Label l1 = new Label();
+		Label l2 = new Label();
+		mg.visitTryCatchBlock(l0, l1, l2, "java/lang/NumberFormatException");
+		mg.invokeStatic(Type.getObjectType(className),
+				Method.getMethod("String gets()"));
+		mg.visitVarInsn(ASTORE, 0);
+		mg.visitVarInsn(ALOAD, 0);
+		mg.visitJumpInsn(IFNONNULL, l0);
+		mg.visitInsn(ACONST_NULL);
+		mg.visitInsn(ARETURN);
+		mg.visitLabel(l0);
+		mg.visitVarInsn(ALOAD, 0);
+		mg.invokeStatic(Type.getType(Integer.class), Method.getMethod("Integer valueOf(String)"));
+		mg.visitLabel(l1);
+		mg.visitInsn(ARETURN);
+		mg.visitLabel(l2);
+		mg.visitVarInsn(ASTORE, 1);
+		mg.visitInsn(ACONST_NULL);
+		mg.visitInsn(ARETURN);
+
+		mg.endMethod();
+		mg.visitEnd();
+
+		definedMethods.put(methodName, new MethodSymbol(methodName, methodSignature));
 	}
 
 	private static void generateGetsMethod(final ClassWriter cw, final DefinedMethods definedMethods) {

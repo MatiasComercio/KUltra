@@ -55,8 +55,19 @@ recursive(5);
 
 
 # bad syntax test => should fail gracefully
-if ("a" < "b"):
-    puts("a < b\n");
-else:
-    puts("a >=b\n");
-end
+#if ("a" < "b"):
+#   puts("a < b\n");
+#else:
+#   puts("a >=b\n");
+#end
+
+str strGetted;
+puts("getted from gets: ");
+puts(gets());
+puts("\n");
+
+
+int getted;
+puts("getted from geti: ");
+#puts(geti());
+puts("\n");

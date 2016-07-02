@@ -33,6 +33,13 @@ public class TestNodes {
 	private static BodyNode generateMainBody() {
 		final BodyNode mainBodyNode = new BodyNode();
 
+		/* geti test */
+		final NodeList<ExpressionNode> putsArgs = new NodeList<>();
+		putsArgs.add(new VariableNode("getiInput"));
+		mainBodyNode.add(new MethodCallNode("puts", putsArgs));
+		mainBodyNode.add(new AssignmentNode("getiInput", new MethodCallNode("geti", new NodeList<>())));
+		mainBodyNode.add(new DeclarationNode("Integer", "getiInput"));
+
 		/* helloWorld call */
 		mainBodyNode.add(generateHelloWorldCall());
 
