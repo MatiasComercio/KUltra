@@ -93,6 +93,7 @@ Statement               ::=             VarDeclaration:vd {: RESULT = vd; :}
                                         | If:i {: RESULT = i; :}
                                         | While:w {: RESULT = w; :}
                                         | MethodCall:mc {: RESULT = mc; :}
+                                        | Return:r {: RESULT = r; :}
                                         ;
 
 Expression              ::=             Expression:e1 MINUS Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, e1, e2); :}
