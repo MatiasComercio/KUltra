@@ -8,15 +8,16 @@ end
 int a;
 a = 2;
 
-puts("hola que tal");
+puts("hola que tal\n");
 
 if (a == 2):
     puts("a es igual a 2");
+    puts("\n");
 end
 
 while (a != 0):
-   puts("a no es 0");
+   puts("a no es 0\n");
    a = a - 1;
 end
 
-puts("a es 0");
+puts("a es 0\n");

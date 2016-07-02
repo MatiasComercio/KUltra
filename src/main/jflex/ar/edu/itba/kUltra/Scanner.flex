@@ -65,45 +65,45 @@ LineComment = "#" {CommentBody}
 
 /* Binary operators */
 
-"-"                            { System.out.println("-"); return symbol("-", MINUS); }
-"+"                            { System.out.println("+"); return symbol("+", PLUS); }
-"*"                            { System.out.println("*"); return symbol("*", MULT); }
-"/"                            { System.out.println("/"); return symbol("/", DIV); }
-"%"                            { System.out.println("mod"); return symbol("mod", MOD); }
-"and"                          { System.out.println("and"); return symbol("and", AND); }
-"or"                           { System.out.println("or"); return symbol("or", OR); }
-"<"                            { System.out.println("<"); return symbol("<", LT); }
-"<="                           { System.out.println("<="); return symbol("<=", LTEQ); }
-">"                            { System.out.println(">"); return symbol(">", GT); }
-">="                           { System.out.println(">="); return symbol(">=", GTEQ); }
-"=="                           { System.out.println("=="); return symbol("==", EQEQ); }
-"!="                           { System.out.println("!="); return symbol("!=", NOTEQ); }
-"="                            { System.out.println("="); return symbol("=", EQ); }
+"-"                            { return symbol("-", MINUS); }
+"+"                            { return symbol("+", PLUS); }
+"*"                            { return symbol("*", MULT); }
+"/"                            { return symbol("/", DIV); }
+"%"                            { return symbol("mod", MOD); }
+"and"                          { return symbol("and", AND); }
+"or"                           { return symbol("or", OR); }
+"<"                            { return symbol("<", LT); }
+"<="                           { return symbol("<=", LTEQ); }
+">"                            { return symbol(">", GT); }
+">="                           { return symbol(">=", GTEQ); }
+"=="                           { return symbol("==", EQEQ); }
+"!="                           { return symbol("!=", NOTEQ); }
+"="                            { return symbol("=", EQ); }
 
 /* separators */
-"("                            { System.out.println("("); return symbol("(", LPAREN); }
-")"                            { System.out.println(")"); return symbol(")", RPAREN); }
-";"                            { System.out.println(";"); return symbol(";", SEMICOLON); }
-","                            { System.out.println(","); return symbol(",", COMMA); }
+"("                            { return symbol("(", LPAREN); }
+")"                            { return symbol(")", RPAREN); }
+";"                            { return symbol(";", SEMICOLON); }
+","                            { return symbol(",", COMMA); }
 
-":"                            { System.out.println(":"); return symbol(":", COLON); }
+":"                            { return symbol(":", COLON); }
 
 /* keywords */
-"int"                          { System.out.println("int"); return symbol("int", INT); }
-"str"                          { System.out.println("str"); return symbol("str", STR); }
-"void"                         { System.out.println("void"); return symbol("void", VOID); }
-"return"                       { System.out.println("return"); return symbol("return", RETURN); }
-{LineComment}                  { System.out.println("COMMENT> " + yytext()); /* ignore :) */ }
+"int"                          { return symbol("int", INT); }
+"str"                          { return symbol("str", STR); }
+"void"                         { return symbol("void", VOID); }
+"return"                       { return symbol("return", RETURN); }
+{LineComment}                  { /* ignore :) */ }
 {WhiteSpace}                   { /* ignore :) */ }
 {LineTerminator}               { /* ignore :) */ }
-{String}            		   { System.out.println("UN STRING"); return symbol("str", STRING, yytext().substring(1, yytext().length() - 1)); } // remove the quotes
-{Integer}           		   { System.out.println("IN ENTERO"); return symbol("int", INTEGER, Integer.valueOf(yytext())); }
-"def"                          { System.out.println("def"); return symbol("def", DEF); }
-"end"                          { System.out.println("end"); return symbol("end", END); }
-"if"                           { System.out.println("if"); return symbol("if", IF); }
-"else"                         { System.out.println("else"); return symbol("else", ELSE); }
-"while"                        { System.out.println("while"); return symbol("while", WHILE); }
-{Identifier}                   { System.out.println("identifier"); return symbol(yytext(), IDENTIFIER, yytext()); }
+{String}            		   { return symbol("str", STRING, yytext().substring(1, yytext().length() - 1)); } // remove the quotes
+{Integer}           		   { return symbol("int", INTEGER, Integer.valueOf(yytext())); }
+"def"                          { return symbol("def", DEF); }
+"end"                          { return symbol("end", END); }
+"if"                           { return symbol("if", IF); }
+"else"                         { return symbol("else", ELSE); }
+"while"                        { return symbol("while", WHILE); }
+{Identifier}                   { return symbol(yytext(), IDENTIFIER, yytext()); }
 
 /* error fallback */
-[^]                            { System.out.println("Illegal character <"+yytext()+">"); }
+[^]                            { /* +++xcheck */ }
