@@ -69,91 +69,91 @@ precedence left UMINUS;
 start with Program;
 
 
-Program                 ::=             MethodList:ml StatementList:sl {: LOGGER.debug("Program"); RESULT = new ProgramNode(ml, sl); :}
+Program                 ::=             MethodList:ml StatementList:sl {: RESULT = new ProgramNode(ml, sl); LOGGER.debug("{}", RESULT); :}
                                         ;
 
 
-MethodList              ::=             Method:m MethodList:ml {: LOGGER.debug("MethodList"); ml.add(m); RESULT = ml; :}
-                                        | /* lambda */ {: LOGGER.debug("Lambda MethodList"); RESULT = new NodeList<>(); :}
+MethodList              ::=             Method:m MethodList:ml {: ml.add(m); RESULT = ml; LOGGER.debug("{}", RESULT); :}
+                                        | /* lambda */ {: RESULT = new NodeList<>(); LOGGER.debug("{}", RESULT); :}
                                         ;
 
 Method                  ::=             DEF Type:t IDENTIFIER:i LPAREN Parameters:p RPAREN COLON StatementList:sl END
-                     {: LOGGER.debug("Method"); RESULT = new MethodNode(t, i, p, sl); :}
+                     {: RESULT = new MethodNode(t, i, p, sl); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-Return                  ::=             RETURN Expression:e SEMICOLON {: LOGGER.debug("Return"); RESULT = new ReturnNode(e); :}
+Return                  ::=             RETURN Expression:e SEMICOLON {: RESULT = new ReturnNode(e); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-Parameters              ::=             Type:t IDENTIFIER:i COMMA Parameters:p {: LOGGER.debug("Parameters"); p.addParameter(t, i); RESULT = p; :}
-                                        | Type:t IDENTIFIER:i {: LOGGER.debug("Parameters"); RESULT = new ParameterListSymbol(); RESULT.addParameter(t, i); :}
-                                        | /* lambda */ {: LOGGER.debug("Parameters"); RESULT = new ParameterListSymbol(); :}
+Parameters              ::=             Type:t IDENTIFIER:i COMMA Parameters:p {: p.addParameter(t, i); RESULT = p; LOGGER.debug("{}", RESULT); :}
+                                        | Type:t IDENTIFIER:i {: RESULT = new ParameterListSymbol(); RESULT.addParameter(t, i); LOGGER.debug("{}", RESULT); :}
+                                        | /* lambda */ {: RESULT = new ParameterListSymbol(); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-Type                    ::=             INT {: LOGGER.debug("Type"); RESULT ="Integer"; :}
-                                        | STR {: LOGGER.debug("Type"); RESULT ="String"; :}
-                                        | VOID {: LOGGER.debug("Type"); RESULT ="void"; :}
+Type                    ::=             INT {: RESULT ="Integer"; LOGGER.debug("{}", RESULT); :}
+                                        | STR {: RESULT ="String"; LOGGER.debug("{}", RESULT); :}
+                                        | VOID {: RESULT ="void"; LOGGER.debug("{}", RESULT); :}
                                         ;
 
-StatementList           ::=             Statement:s StatementList:sl  {: LOGGER.debug("StatementList"); sl.add(s); RESULT = sl; :}
-                                        | /* lambda */ {: LOGGER.debug("StatementList"); RESULT = new BodyNode(); :}
+StatementList           ::=             Statement:s StatementList:sl  {: sl.add(s); RESULT = sl; LOGGER.debug("{}", RESULT); :}
+                                        | /* lambda */ {: RESULT = new BodyNode(); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-Statement               ::=             VarDeclaration:vd {: LOGGER.debug("Statement"); RESULT = vd; :}
-                                        | Assignment:a {: LOGGER.debug("Statement"); RESULT = a; :}
-                                        | If:i {: LOGGER.debug("Statement"); RESULT = i; :}
-                                        | While:w {: LOGGER.debug("Statement"); RESULT = w; :}
-                                        | MethodCall:mc {: LOGGER.debug("Statement"); RESULT = mc; :}
-                                        | Return:r {: LOGGER.debug("Statement"); RESULT = r; :}
+Statement               ::=             VarDeclaration:vd {: RESULT = vd; LOGGER.debug("{}", RESULT); :}
+                                        | Assignment:a {: RESULT = a; LOGGER.debug("{}", RESULT); :}
+                                        | If:i {: RESULT = i; LOGGER.debug("{}", RESULT); :}
+                                        | While:w {: RESULT = w; LOGGER.debug("{}", RESULT); :}
+                                        | MethodCall:mc {: RESULT = mc; LOGGER.debug("{}", RESULT); :}
+                                        | Return:r {: RESULT = r; LOGGER.debug("{}", RESULT); :}
                                         ;
 
-Expression              ::=             Expression:e1 MINUS Expression:e2 {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.SUB, e1, e2); :}
-                                        | Expression:e1 PLUS Expression:e2 {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.ADD, e1, e2); :}
-                                        | Expression:e1 MULT Expression:e2 {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.MUL, e1, e2); :}
-                                        | Expression:e1 DIV Expression:e2 {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.DIV, e1, e2); :}
-                                        | Expression:e1 MOD Expression:e2 {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.REM, e1, e2); :}
-                                        | Expression:e1 AND Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.AND, e1, e2); :}
-                                        | Expression:e1 OR Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.OR, e1, e2); :}
-                                        | Expression:e1 LT Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.LT, e1, e2); :}
-                                        | Expression:e1 LTEQ Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.LE, e1, e2); :}
-                                        | Expression:e1 GT Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.GT, e1, e2); :}
-                                        | Expression:e1 GTEQ Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.GE, e1, e2); :}
-                                        | Expression:e1 EQEQ Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.EQ, e1, e2); :}
-                                        | Expression:e1 NOTEQ Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.NE, e1, e2); :}
-                                        | MINUS Expression:e {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e); :} /* +++ximprove */ %prec UMINUS
-                                        | LPAREN Expression:e RPAREN {: LOGGER.debug("Expression"); RESULT = e; :}
-                                        | MethodCall:mc {: LOGGER.debug("Expression"); RESULT = mc; :}
-                                        | Literal:l {: LOGGER.debug("Expression"); RESULT = l; :}
-                                        | Variable:v {: LOGGER.debug("Expression"); RESULT = v; :}
+Expression              ::=             Expression:e1 MINUS Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 PLUS Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.ADD, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 MULT Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.MUL, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 DIV Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.DIV, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 MOD Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.REM, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 AND Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.AND, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 OR Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.OR, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 LT Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.LT, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 LTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.LE, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 GT Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.GT, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 GTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.GE, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 EQEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.EQ, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 NOTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.NE, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | MINUS Expression:e {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e); LOGGER.debug("{}", RESULT); :} /* +++ximprove */ %prec UMINUS
+                                        | LPAREN Expression:e RPAREN {: RESULT = e; LOGGER.debug("{}", RESULT); :}
+                                        | MethodCall:mc {: RESULT = mc; LOGGER.debug("{}", RESULT); :}
+                                        | Literal:l {: RESULT = l; LOGGER.debug("{}", RESULT); :}
+                                        | Variable:v {: RESULT = v; LOGGER.debug("{}", RESULT); :}
                                         ;
 
 
-Variable                ::=             IDENTIFIER:i {: LOGGER.debug("Variable"); RESULT = new VariableNode(i); :}
+Variable                ::=             IDENTIFIER:i {: RESULT = new VariableNode(i); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-VarDeclaration          ::=             Type:t IDENTIFIER:i SEMICOLON {: LOGGER.debug("VarDeclaration"); RESULT = new DeclarationNode(t, i); :}
+VarDeclaration          ::=             Type:t IDENTIFIER:i SEMICOLON {: RESULT = new DeclarationNode(t, i); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-Assignment              ::=             IDENTIFIER:i EQ Expression:e SEMICOLON {: LOGGER.debug("Assignment"); RESULT = new AssignmentNode(i, e); :}
+Assignment              ::=             IDENTIFIER:i EQ Expression:e SEMICOLON {: RESULT = new AssignmentNode(i, e); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-If                      ::=             IF LPAREN Expression:c RPAREN COLON StatementList:sl END {: LOGGER.debug("If"); RESULT = new IfNode(c, sl, null); :}
+If                      ::=             IF LPAREN Expression:c RPAREN COLON StatementList:sl END {: RESULT = new IfNode(c, sl, null); LOGGER.debug("{}", RESULT); :}
                                         |
-                                        IF LPAREN Expression:c RPAREN COLON StatementList:sl ELSE COLON StatementList:el END {: LOGGER.debug("If"); RESULT = new IfNode(c, sl, el); :}
+                                        IF LPAREN Expression:c RPAREN COLON StatementList:sl ELSE COLON StatementList:el END {: RESULT = new IfNode(c, sl, el); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-While                   ::=             WHILE LPAREN Expression:c RPAREN COLON StatementList:sl END {: LOGGER.debug("While"); RESULT = new WhileNode(c, sl); :}
+While                   ::=             WHILE LPAREN Expression:c RPAREN COLON StatementList:sl END {: RESULT = new WhileNode(c, sl); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-MethodCall              ::=             IDENTIFIER:i LPAREN Arguments:a RPAREN SEMICOLON {: LOGGER.debug("MethodCall"); RESULT = new MethodCallNode(i, a); :}
+MethodCall              ::=             IDENTIFIER:i LPAREN Arguments:a RPAREN SEMICOLON {: RESULT = new MethodCallNode(i, a); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-Arguments               ::=             Expression:e COMMA Arguments:a {: LOGGER.debug("Arguments"); a.add(e); RESULT = a;  :}
-                                        | Expression:e {: LOGGER.debug("Arguments"); RESULT = new NodeList<>(); RESULT.add(e); :}
-                                        | /* lambda */ {: LOGGER.debug("Arguments"); RESULT = new NodeList<>(); :}
+Arguments               ::=             Expression:e COMMA Arguments:a {: a.add(e); RESULT = a; LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e {: RESULT = new NodeList<>(); RESULT.add(e); LOGGER.debug("{}", RESULT); :}
+                                        | /* lambda */ {: RESULT = new NodeList<>(); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-Literal                 ::=             INTEGER:n {: LOGGER.debug("Literal"); RESULT = new LiteralNode<Integer>(n); :}
+Literal                 ::=             INTEGER:n {: RESULT = new LiteralNode<Integer>(n); LOGGER.debug("{}", RESULT); :}
                                         |
-                                        STRING:s {: LOGGER.debug("Literal"); RESULT = new LiteralNode<String>(s); :};
+                                        STRING:s {: RESULT = new LiteralNode<String>(s); LOGGER.debug("{}", RESULT); :};
                                         
 
