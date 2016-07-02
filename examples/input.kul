@@ -8,6 +8,9 @@ end
 int a;
 a = 2;
 
+str b;
+b = "en b";
+
 puts("hola que tal\n");
 
 if (a == 2):

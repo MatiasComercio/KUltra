@@ -4,8 +4,12 @@ import java_cup.runtime.*;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import ar.edu.itba.kUltra.nodes.*;
 import ar.edu.itba.kUltra.symbols.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 parser code {:
+    private final static Logger LOGGER = LoggerFactory.getLogger(Parser.class);
     Scanner scanner;
 
   public Parser(Scanner scann, ComplexSymbolFactory sf) {
@@ -59,91 +63,91 @@ precedence left EQEQ, NOTEQ;
 start with Program;
 
 
-Program                 ::=             MethodList:ml StatementList:sl {: RESULT = new ProgramNode(ml, sl); :}
+Program                 ::=             MethodList:ml StatementList:sl {: LOGGER.debug("Program"); RESULT = new ProgramNode(ml, sl); :}
                                         ;
 
 
-MethodList              ::=             Method:m MethodList:ml {: ml.add(m); RESULT = ml; :}
-                                        | /* lambda */ {: RESULT = new NodeList<>(); :}
+MethodList              ::=             Method:m MethodList:ml {: LOGGER.debug("MethodList"); ml.add(m); RESULT = ml; :}
+                                        | /* lambda */ {: LOGGER.debug("Lambda MethodList"); RESULT = new NodeList<>(); :}
                                         ;
 
 Method                  ::=             DEF Type:t IDENTIFIER:i LPAREN Parameters:p RPAREN COLON StatementList:sl END
-                     {: RESULT = new MethodNode(t, i, p, sl); :}
+                     {: LOGGER.debug("Method"); RESULT = new MethodNode(t, i, p, sl); :}
                                         ;
 
-Return                  ::=             RETURN Expression:e SEMICOLON {: RESULT = new ReturnNode(e); :}
+Return                  ::=             RETURN Expression:e SEMICOLON {: LOGGER.debug("Return"); RESULT = new ReturnNode(e); :}
                                         ;
 
-Parameters              ::=             Type:t IDENTIFIER:i COMMA Parameters:p {: p.addParameter(t, i); RESULT = p; :}
-                                        | Type:t IDENTIFIER:i {: RESULT = new ParameterListSymbol(); RESULT.addParameter(t, i); :}
-                                        | /* lambda */ {: RESULT = new ParameterListSymbol(); :}
+Parameters              ::=             Type:t IDENTIFIER:i COMMA Parameters:p {: LOGGER.debug("Parameters"); p.addParameter(t, i); RESULT = p; :}
+                                        | Type:t IDENTIFIER:i {: LOGGER.debug("Parameters"); RESULT = new ParameterListSymbol(); RESULT.addParameter(t, i); :}
+                                        | /* lambda */ {: LOGGER.debug("Parameters"); RESULT = new ParameterListSymbol(); :}
                                         ;
 
-Type                    ::=             INT {: RESULT ="Integer"; :}
-                                        | STR {: RESULT ="String"; :}
-                                        | VOID {: RESULT ="void"; :}
+Type                    ::=             INT {: LOGGER.debug("Type"); RESULT ="Integer"; :}
+                                        | STR {: LOGGER.debug("Type"); RESULT ="String"; :}
+                                        | VOID {: LOGGER.debug("Type"); RESULT ="void"; :}
                                         ;
 
-StatementList           ::=             Statement:s StatementList:sl  {: sl.add(s); RESULT = sl; :}
-                                        | /* lambda */ {: RESULT = new BodyNode(); :}
+StatementList           ::=             Statement:s StatementList:sl  {: LOGGER.debug("StatementList"); sl.add(s); RESULT = sl; :}
+                                        | /* lambda */ {: LOGGER.debug("StatementList"); RESULT = new BodyNode(); :}
                                         ;
 
-Statement               ::=             VarDeclaration:vd {: RESULT = vd; :}
-                                        | Assignment:a {: RESULT = a; :}
-                                        | If:i {: RESULT = i; :}
-                                        | While:w {: RESULT = w; :}
-                                        | MethodCall:mc {: RESULT = mc; :}
-                                        | Return:r {: RESULT = r; :}
+Statement               ::=             VarDeclaration:vd {: LOGGER.debug("Statement"); RESULT = vd; :}
+                                        | Assignment:a {: LOGGER.debug("Statement"); RESULT = a; :}
+                                        | If:i {: LOGGER.debug("Statement"); RESULT = i; :}
+                                        | While:w {: LOGGER.debug("Statement"); RESULT = w; :}
+                                        | MethodCall:mc {: LOGGER.debug("Statement"); RESULT = mc; :}
+                                        | Return:r {: LOGGER.debug("Statement"); RESULT = r; :}
                                         ;
 
-Expression              ::=             Expression:e1 MINUS Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, e1, e2); :}
-                                        | Expression:e1 PLUS Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.ADD, e1, e2); :}
-                                        | Expression:e1 MULT Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.MUL, e1, e2); :}
-                                        | Expression:e1 DIV Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.DIV, e1, e2); :}
-                                        | Expression:e1 MOD Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.REM, e1, e2); :}
-                                        | Expression:e1 AND Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.AND, e1, e2); :}
-                                        | Expression:e1 OR Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.OR, e1, e2); :}
-                                        | Expression:e1 LT Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.LT, e1, e2); :}
-                                        | Expression:e1 LTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.LE, e1, e2); :}
-                                        | Expression:e1 GT Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.GT, e1, e2); :}
-                                        | Expression:e1 GTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.GE, e1, e2); :}
-                                        | Expression:e1 EQEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.EQ, e1, e2); :}
-                                        | Expression:e1 NOTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.NE, e1, e2); :}
-                                        | MINUS Expression:e {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e); :} // +++ximprove
-                                        | LPAREN Expression:e RPAREN {: RESULT = e; :}
-                                        | MethodCall:mc {: RESULT = mc; :}
-                                        | Literal:l {: RESULT = l; :}
-                                        | Variable:v {: RESULT = v; :}
+Expression              ::=             Expression:e1 MINUS Expression:e2 {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.SUB, e1, e2); :}
+                                        | Expression:e1 PLUS Expression:e2 {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.ADD, e1, e2); :}
+                                        | Expression:e1 MULT Expression:e2 {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.MUL, e1, e2); :}
+                                        | Expression:e1 DIV Expression:e2 {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.DIV, e1, e2); :}
+                                        | Expression:e1 MOD Expression:e2 {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.REM, e1, e2); :}
+                                        | Expression:e1 AND Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.AND, e1, e2); :}
+                                        | Expression:e1 OR Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.OR, e1, e2); :}
+                                        | Expression:e1 LT Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.LT, e1, e2); :}
+                                        | Expression:e1 LTEQ Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.LE, e1, e2); :}
+                                        | Expression:e1 GT Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.GT, e1, e2); :}
+                                        | Expression:e1 GTEQ Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.GE, e1, e2); :}
+                                        | Expression:e1 EQEQ Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.EQ, e1, e2); :}
+                                        | Expression:e1 NOTEQ Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.NE, e1, e2); :}
+                                        | MINUS Expression:e {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e); :} // +++ximprove
+                                        | LPAREN Expression:e RPAREN {: LOGGER.debug("Expression"); RESULT = e; :}
+                                        | MethodCall:mc {: LOGGER.debug("Expression"); RESULT = mc; :}
+                                        | Literal:l {: LOGGER.debug("Expression"); RESULT = l; :}
+                                        | Variable:v {: LOGGER.debug("Expression"); RESULT = v; :}
                                         ;
 
 
-Variable                ::=             IDENTIFIER:i {: RESULT = new VariableNode(i); :}
+Variable                ::=             IDENTIFIER:i {: LOGGER.debug("Variable"); RESULT = new VariableNode(i); :}
                                         ;
 
-VarDeclaration          ::=             Type:t IDENTIFIER:i SEMICOLON {: RESULT = new DeclarationNode(t, i); :}
+VarDeclaration          ::=             Type:t IDENTIFIER:i SEMICOLON {: LOGGER.debug("VarDeclaration"); RESULT = new DeclarationNode(t, i); :}
                                         ;
 
-Assignment              ::=             IDENTIFIER:i EQ Expression:e SEMICOLON {: RESULT = new AssignmentNode(i, e); :}
+Assignment              ::=             IDENTIFIER:i EQ Expression:e SEMICOLON {: LOGGER.debug("Assignment"); RESULT = new AssignmentNode(i, e); :}
                                         ;
 
-If                      ::=             IF LPAREN Expression:c RPAREN COLON StatementList:sl END {: RESULT = new IfNode(c, sl, null); :}
+If                      ::=             IF LPAREN Expression:c RPAREN COLON StatementList:sl END {: LOGGER.debug("If"); RESULT = new IfNode(c, sl, null); :}
                                         |
-                                        IF LPAREN Expression:c RPAREN COLON StatementList:sl ELSE COLON StatementList:el END {: RESULT = new IfNode(c, sl, el); :}
+                                        IF LPAREN Expression:c RPAREN COLON StatementList:sl ELSE COLON StatementList:el END {: LOGGER.debug("If"); RESULT = new IfNode(c, sl, el); :}
                                         ;
 
-While                   ::=             WHILE LPAREN Expression:c RPAREN COLON StatementList:sl END {: RESULT = new WhileNode(c, sl); :}
+While                   ::=             WHILE LPAREN Expression:c RPAREN COLON StatementList:sl END {: LOGGER.debug("While"); RESULT = new WhileNode(c, sl); :}
                                         ;
 
-MethodCall              ::=             IDENTIFIER:i LPAREN Arguments:a RPAREN SEMICOLON {: RESULT = new MethodCallNode(i, a); :}
+MethodCall              ::=             IDENTIFIER:i LPAREN Arguments:a RPAREN SEMICOLON {: LOGGER.debug("MethodCall"); RESULT = new MethodCallNode(i, a); :}
                                         ;
 
-Arguments               ::=             Expression:e COMMA Arguments:a {: a.add(e); RESULT = a;  :}
-                                        | Expression:e {: RESULT = new NodeList<>(); RESULT.add(e); :}
-                                        | /* lambda */ {: RESULT = new NodeList<>(); :}
+Arguments               ::=             Expression:e COMMA Arguments:a {: LOGGER.debug("Arguments"); a.add(e); RESULT = a;  :}
+                                        | Expression:e {: LOGGER.debug("Arguments"); RESULT = new NodeList<>(); RESULT.add(e); :}
+                                        | /* lambda */ {: LOGGER.debug("Arguments"); RESULT = new NodeList<>(); :}
                                         ;
 
-Literal                 ::=             INTEGER:n {: RESULT = new LiteralNode<>(n); :}
+Literal                 ::=             INTEGER:n {: LOGGER.debug("Literal"); RESULT = new LiteralNode<Integer>(n); :}
                                         |
-                                        STRING:s {: RESULT = new LiteralNode<>(s); :};
+                                        STRING:s {: LOGGER.debug("Literal"); RESULT = new LiteralNode<String>(s); :};
                                         
 
