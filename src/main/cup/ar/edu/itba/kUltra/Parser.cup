@@ -58,6 +58,7 @@ non terminal LiteralNode Literal;
 
 
 precedence left Variable, MethodCall;
+precedence left Assignment;
 precedence left RETURN;
 
 precedence left AND, OR;
@@ -98,12 +99,12 @@ StatementList           ::=             Statement:s StatementList:sl  {: sl.add(
                                         | /* lambda */ {: RESULT = new BodyNode(); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-Statement               ::=             VarDeclaration:vd {: RESULT = vd; LOGGER.debug("{}", RESULT); :}
-                                        | Assignment:a {: RESULT = a; LOGGER.debug("{}", RESULT); :}
-                                        | If:i {: RESULT = i; LOGGER.debug("{}", RESULT); :}
-                                        | While:w {: RESULT = w; LOGGER.debug("{}", RESULT); :}
-                                        | MethodCall:mc {: RESULT = mc; LOGGER.debug("{}", RESULT); :}
-                                        | Return:r {: RESULT = r; LOGGER.debug("{}", RESULT); :}
+Statement               ::=             VarDeclaration:vd {: RESULT = vd; LOGGER.debug("Statement - {}", RESULT); :}
+                                        | Assignment:a {: RESULT = a; LOGGER.debug("Statement - {}", RESULT); :}
+                                        | If:i {: RESULT = i; LOGGER.debug("Statement - {}", RESULT); :}
+                                        | While:w {: RESULT = w; LOGGER.debug("Statement - {}", RESULT); :}
+                                        | MethodCall:mc {: RESULT = mc; LOGGER.debug("Statement - {}", RESULT); :} SEMICOLON
+                                        | Return:r {: RESULT = r; LOGGER.debug("Statement - {}", RESULT); :}
                                         ;
 
 Expression              ::=             Expression:e1 MINUS Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, e1, e2); LOGGER.debug("{}", RESULT); :}
@@ -120,10 +121,10 @@ Expression              ::=             Expression:e1 MINUS Expression:e2 {: RES
                                         | Expression:e1 EQEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.EQ, e1, e2); LOGGER.debug("{}", RESULT); :}
                                         | Expression:e1 NOTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.NE, e1, e2); LOGGER.debug("{}", RESULT); :}
                                         | MINUS Expression:e {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e); LOGGER.debug("{}", RESULT); :} /* +++ximprove */ %prec UMINUS
-                                        | LPAREN Expression:e RPAREN {: RESULT = e; LOGGER.debug("{}", RESULT); :}
-                                        | MethodCall:mc {: RESULT = mc; LOGGER.debug("{}", RESULT); :}
-                                        | Literal:l {: RESULT = l; LOGGER.debug("{}", RESULT); :}
-                                        | Variable:v {: RESULT = v; LOGGER.debug("{}", RESULT); :}
+                                        | LPAREN Expression:e RPAREN {: RESULT = e; LOGGER.debug("Expression - {}", RESULT); :}
+                                        | MethodCall:mc {: RESULT = mc; LOGGER.debug("Expression - {}", RESULT); :}
+                                        | Literal:l {: RESULT = l; LOGGER.debug("Expression - {}", RESULT); :}
+                                        | Variable:v {: RESULT = v; LOGGER.debug("Expression - {}", RESULT); :}
                                         ;
 
 
@@ -144,7 +145,7 @@ If                      ::=             IF LPAREN Expression:c RPAREN COLON Stat
 While                   ::=             WHILE LPAREN Expression:c RPAREN COLON StatementList:sl END {: RESULT = new WhileNode(c, sl); LOGGER.debug("{}", RESULT); :}
                                         ;
 
-MethodCall              ::=             IDENTIFIER:i LPAREN Arguments:a RPAREN SEMICOLON {: RESULT = new MethodCallNode(i, a); LOGGER.debug("{}", RESULT); :}
+MethodCall              ::=             IDENTIFIER:i LPAREN Arguments:a RPAREN {: RESULT = new MethodCallNode(i, a); LOGGER.debug("{}", RESULT); :}
                                         ;
 
 Arguments               ::=             Expression:e COMMA Arguments:a {: a.add(e); RESULT = a; LOGGER.debug("{}", RESULT); :}

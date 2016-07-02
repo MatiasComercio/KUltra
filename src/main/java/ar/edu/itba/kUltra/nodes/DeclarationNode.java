@@ -25,4 +25,12 @@ public class DeclarationNode implements StatementNode {
 	public String getIdentifier() {
 		return identifier;
 	}
+
+	@Override
+	public String toString() {
+		return "DeclarationNode{" +
+				"type=" + type +
+				", identifier='" + identifier + '\'' +
+				'}';
+	}
 }
