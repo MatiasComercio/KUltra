@@ -3,7 +3,6 @@ package ar.edu.itba.kUltra.nodes;
 import ar.edu.itba.kUltra.helpers.Context;
 import ar.edu.itba.kUltra.helpers.TypeConverter;
 import ar.edu.itba.kUltra.symbols.ParameterListSymbol;
-import com.sun.istack.internal.NotNull;
 import org.objectweb.asm.Type;
 
 public class MethodNode implements Node {
@@ -13,7 +12,14 @@ public class MethodNode implements Node {
 	private final ParameterListSymbol parameterListSymbol;
 	private final BodyNode bodyNode;
 
-	public MethodNode(final String returnType, final String identifier, @NotNull final ParameterListSymbol parameterListSymbol, final BodyNode bodyNode) {
+	/**
+	 * +++xdocument
+	 * @param returnType
+	 * @param identifier
+	 * @param parameterListSymbol not null
+	 * @param bodyNode
+	 */
+	public MethodNode(final String returnType, final String identifier, final ParameterListSymbol parameterListSymbol, final BodyNode bodyNode) {
 		this.javaType = TypeConverter.getJavaTypeString(returnType);
 		this.returnType = TypeConverter.getType(returnType);
 		this.identifier = identifier;
