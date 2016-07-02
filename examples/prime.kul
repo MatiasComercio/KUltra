@@ -1,0 +1,23 @@
+# Returns 1 if number n is prime; 0 else
+def int isPrime(int n):
+ 	int i = 2;
+ 	int top = n * n;
+ 	if(n <= 1):
+ 		return 0;
+ 	end
+ 	while(i < top):
+ 		if (n % i == 0):
+ 			return 0;
+ 		end
+ 		i = i + 1;
+ 	end
+ 	return 1;
+end
+puts("Enter a number: ");
+int number = geti();
+if (isPrime(number)):
+	puts("Is prime!\n");
+else:
+	puts("Is not prime!\n");
+end
+return 0;

@@ -1,0 +1,13 @@
+# Returns factorial number n
+def int factorial(int n):
+	if (n <= 1):
+		return 1;
+	end
+	return n * factorial(n - 1);
+end
+int number;
+puts("Enter a number: ");
+number = geti();
+puts("The factorial number is: ");
+puts(factorial(number));
+puts("\n");

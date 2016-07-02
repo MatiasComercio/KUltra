@@ -1,0 +1,13 @@
+# Returns fibonacci number n
+def int fibonacci(int n):
+	if (n == 0 or n == 1):
+		return n;
+	end
+	return fibonacci(n - 1) + fibonacci(n - 2);
+end
+puts("Enter a number: ");
+int number;
+number = geti();
+puts("The fibonacci number is: ");
+puts(fibonacci(number));
+puts("\n");
