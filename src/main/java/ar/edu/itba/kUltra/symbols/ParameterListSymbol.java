@@ -1,24 +1,26 @@
 package ar.edu.itba.kUltra.symbols;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class ParameterListSymbol {
-	private final List<ParameterSymbol> parameterSymbols;
+	private final Deque<ParameterSymbol> parameterSymbols;
 
 	public ParameterListSymbol() {
 		parameterSymbols = new LinkedList<>();
 	}
 
 	public void addParameter(final String type, final String identifier) {
-		final int position = parameterSymbols.size();
-		parameterSymbols.add(new ParameterSymbol(type, identifier, position));
+		// position is unknown until the list is complete
+		parameterSymbols.push(new ParameterSymbol(type, identifier, -1));
 	}
 
 	public List<ParameterSymbol> getParameterSymbols() {
-		return Collections.unmodifiableList(parameterSymbols);
+		final List<ParameterSymbol> list = new LinkedList<>();
+		int i = 0;
+		for (ParameterSymbol p : parameterSymbols) {
+			list.add(new ParameterSymbol(p.getType(), p.getIdentifier(), i++));
+		}
+		return list;
 	}
 
 	public static class ParameterSymbol {
@@ -55,6 +57,7 @@ public class ParameterListSymbol {
 			if (i < parameterSymbols.size() - 1) { // there are more parameterSymbols
 				s.append(',');
 			}
+			i++;
 		}
 		return s.toString();
 	}

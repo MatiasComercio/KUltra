@@ -22,6 +22,21 @@ def int func(int arg1, int arr):
     return 0;
 end
 
+def void voidFun(str arg1, int arg2):
+    puts("arg1 is: ");
+    puts(arg1);
+    puts("\n");
+
+    int var1;
+    var1 = arg2 * 2 + 1 - 5/2 % recursive(2);
+    if (var1 < 3):
+        puts("var1: "); puts(var1); puts("is less than 3\n");
+    else:
+        puts("var1: "); puts(var1); puts("is greater or equal than 3\n");
+    end
+
+    return;
+end
 
 
 int a;
@@ -66,6 +81,10 @@ puts("getted from gets: ");
 puts(gets());
 puts("\n");
 
-#puts("getted from geti: ");
-#puts(geti());
-#puts("\n");
+puts("getted from geti: ");
+puts(geti());
+puts("\n");
+
+voidFun("hello from voidFun. This is arg1", 5);
+puts("Finishing program...\n");
+puts("[DONE]\n");

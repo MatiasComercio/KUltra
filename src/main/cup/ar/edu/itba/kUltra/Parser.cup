@@ -56,11 +56,6 @@ non terminal MethodCallNode MethodCall;
 non terminal NodeList<ExpressionNode> Arguments;
 non terminal LiteralNode Literal;
 
-
-precedence left Variable, MethodCall;
-precedence left Assignment;
-precedence left RETURN;
-
 precedence left AND, OR;
 precedence left LT, LTEQ, GT, GTEQ, EQEQ, NOTEQ;
 precedence left MINUS, PLUS;
@@ -83,6 +78,7 @@ Method                  ::=             DEF Type:t IDENTIFIER:i LPAREN Parameter
                                         ;
 
 Return                  ::=             RETURN Expression:e SEMICOLON {: RESULT = new ReturnNode(e); LOGGER.debug("{}", RESULT); :}
+                                        | RETURN SEMICOLON {: RESULT = new ReturnNode(null); LOGGER.debug("{}", RESULT); :} // return; for void methods
                                         ;
 
 Parameters              ::=             Type:t IDENTIFIER:i COMMA Parameters:p {: p.addParameter(t, i); RESULT = p; LOGGER.debug("{}", RESULT); :}

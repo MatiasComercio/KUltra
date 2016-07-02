@@ -4,10 +4,6 @@ import ar.edu.itba.kUltra.nodes.*;
 import ar.edu.itba.kUltra.symbols.ParameterListSymbol;
 import org.objectweb.asm.commons.GeneratorAdapter;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-
 public class TestNodes {
 	public static void main(String[] args) {
 
