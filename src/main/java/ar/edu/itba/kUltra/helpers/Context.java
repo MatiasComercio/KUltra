@@ -123,7 +123,7 @@ public class Context {
 
 	public void assignTo(final String identifier) {
 		if (!definedVariablesName.contains(identifier)) {
-			throw new IllegalArgumentException("This variable was already defined on this context");
+			throw new IllegalArgumentException("This variable is not defined on this context");
 		}
 
 		storeFromStack(identifier);

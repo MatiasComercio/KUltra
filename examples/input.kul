@@ -16,6 +16,7 @@ end
 
 while (a != 0):
    puts("a no es 0");
+   a = a - 1;
 end
 
 puts("a es 0");

@@ -1,5 +1,6 @@
 package ar.edu.itba.kUltra;
 
+import ar.edu.itba.kUltra.nodes.ProgramNode;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.Symbol;
 import org.slf4j.Logger;
@@ -67,7 +68,16 @@ public class KUltra {
 			return;
 		}
 
-		System.out.println(programSymbol);
+		final Object programSymbolValue = programSymbol.value;
+		if (!(programSymbolValue instanceof ProgramNode)) {
+			LOGGER.debug("[FAILED] - programSymbolValue is not instance of ProgramNode, and should be");
+			parseFailed();
+			return;
+		}
+
+		final ProgramNode programNode = (ProgramNode) programSymbolValue;
+
+		programNode.compileAs("compiled" + File.separatorChar + file.getName());
 
 	}
 
