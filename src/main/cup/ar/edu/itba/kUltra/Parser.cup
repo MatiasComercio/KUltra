@@ -31,23 +31,23 @@ terminal Integer INTEGER;
 terminal String STRING, IDENTIFIER;
 
 
-non terminal Program;
-non terminal MethodList;
-non terminal Method;
-non terminal Return;
-non terminal Parameters;
-non terminal Type;
-non terminal StatementList;
-non terminal Statement;
-non terminal Expression;
-non terminal Variable;
-non terminal VarDeclaration;
-non terminal Assignment;
-non terminal If;
-non terminal While;
-non terminal MethodCall;
-non terminal Arguments;
-non terminal Literal;
+non terminal ProgramNode Program;
+non terminal NodeList MethodList;
+non terminal MethodNode Method;
+non terminal ReturnNode Return;
+non terminal NodeList Parameters; // +++xfix
+non terminal String Type;
+non terminal BodyNode StatementList;
+non terminal StatementNode Statement;
+non terminal ExpressionNode Expression;
+non terminal VariableNode Variable;
+non terminal DeclarationNode VarDeclaration;
+non terminal AssignmentNode Assignment;
+non terminal IfNode If;
+non terminal WhileNode While;
+non terminal MethodCallNode MethodCall;
+non terminal Node Arguments; // +++xfix
+non terminal LiteralNode Literal;
 
 precedence left AND, OR;
 precedence left MINUS, PLUS, MULT, DIV, MOD;
@@ -77,7 +77,7 @@ Parameters              ::=             Type:t IDENTIFIER:i COMMA Parameters:p {
 
 Type                    ::=             INT {: RESULT ="int"; :}
                                         | STR {: RESULT ="str"; :}
-                                        ;
+                                        ; /* +++xtodo: VOID ("void") */
 
 StatementList           ::=             Statement:s StatementList:sl  {: RESULT = sl; sl.add(s); :}
                                         | /* lambda */ {: RESULT = new NodeList(); :}

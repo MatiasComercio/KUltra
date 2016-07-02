@@ -1,6 +1,8 @@
 package ar.edu.itba.kUltra.nodes;
 
-public class ArgumentNode /* +++xcheck: should implement Node? */ {
+import ar.edu.itba.kUltra.helpers.Context;
+
+public class ArgumentNode implements Node/* +++xcheck: should implement Node? */ {
 	/**
 	 * Name of the current argument
 	 */
@@ -25,5 +27,10 @@ public class ArgumentNode /* +++xcheck: should implement Node? */ {
 
 	public int getPosition() {
 		return position;
+	}
+
+	@Override
+	public void process(final Context context) {
+		// +++xcheck!!!!!!!!!! +++ximportant: defined so as to be able to add to Parser.cup
 	}
 }
