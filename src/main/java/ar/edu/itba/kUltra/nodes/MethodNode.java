@@ -14,13 +14,13 @@ public class MethodNode implements Node {
 
 	/**
 	 * +++xdocument
-	 * @param returnType
+	 * @param returnType java type
 	 * @param identifier
 	 * @param parameterListSymbol not null
 	 * @param bodyNode
 	 */
 	public MethodNode(final String returnType, final String identifier, final ParameterListSymbol parameterListSymbol, final BodyNode bodyNode) {
-		this.javaType = TypeConverter.getJavaTypeString(returnType);
+		this.javaType = returnType;
 		this.returnType = TypeConverter.getType(returnType);
 		this.identifier = identifier;
 		this.parameterListSymbol = parameterListSymbol;

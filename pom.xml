@@ -13,6 +13,10 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven-jar-plugin.version>2.6</maven-jar-plugin.version>
+        <org.slf4j.version>1.7.21</org.slf4j.version>
+        <ch.qos.logback.version>1.1.7</ch.qos.logback.version>
+        <org.logback.extensions.version>0.1.4</org.logback.extensions.version>
     </properties>
 
     <dependencies>
@@ -41,23 +45,35 @@
             <artifactId>jflex</artifactId>
             <version>1.6.0</version>
         </dependency>
+
+        <!-- Logback -->
         <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>18.0</version>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.12-beta-2</version>
-            <scope>test</scope>
+            <groupId>org.slf4j</groupId>
+            <artifactId>jcl-over-slf4j</artifactId>
+            <version>${org.slf4j.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.hamcrest</groupId>
-            <artifactId>hamcrest-all</artifactId>
-            <version>1.3</version>
-            <scope>test</scope>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${ch.qos.logback.version}</version>
         </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>${ch.qos.logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.logback-extensions</groupId>
+            <artifactId>logback-ext-spring</artifactId>
+            <version>${org.logback.extensions.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+        <!-- /Logback -->
     </dependencies>
 
     <repositories>
@@ -128,6 +144,21 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
+<!--            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven-jar-plugin.version}</version>
+                <configuration>
+                    <excludes>
+                        <packagingExcludes>**/logback-test.xml</packagingExcludes>
+                    </excludes>
+                    <archive>
+                        <manifest>
+                            <mainClass>ar.edu.itba.kUltra.KUltra</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -146,7 +177,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ar.edu.itba.kUltra.tests.TestNodes</mainClass>
+                            <mainClass>ar.edu.itba.kUltra.KUltra</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>

@@ -56,6 +56,8 @@ precedence left MINUS, PLUS, MULT, DIV, MOD;
 precedence left LT, LTEQ, GT, GTEQ;
 precedence left EQEQ, NOTEQ;
 
+start with Program;
+
 
 Program                 ::=             MethodList:ml StatementList:sl {: RESULT = new ProgramNode(ml, sl); :}
                                         ;
