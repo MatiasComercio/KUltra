@@ -273,6 +273,10 @@ public class Context {
 
 	public void createMethod(final String identifier, final String signature, final ParameterListSymbol argumentNodes,
 	                         final BodyNode bodyNode, final Type returnType) {
+		/* first, save it as defined so as to be able to use it later */
+		definedMethods.put(identifier,
+				new MethodSymbol(identifier, signature));
+
 		final Method m = Method.getMethod(signature);
 		final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
 
@@ -282,9 +286,6 @@ public class Context {
 
 		mg.endMethod();
 		mg.visitEnd();
-
-		definedMethods.put(identifier,
-				new MethodSymbol(identifier, signature));
 	}
 
 

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SimpleProgram {
 
@@ -20,6 +21,23 @@ public class SimpleProgram {
 	private static String println(final String s) {
 		System.out.println(s);
 		return s;
+	}
+
+	private static Integer geti() {
+		final String s = gets();
+		if (s == null) {
+			return null;
+		}
+
+		try {
+			return Integer.valueOf(s);
+		} catch (NumberFormatException e) {
+			return null;
+		}
+	}
+
+	private static boolean strcmp(String s1, String s2) {
+		return Objects.equals(s1, s2);
 	}
 
 	private static String gets() {

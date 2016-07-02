@@ -1,9 +1,28 @@
 #comment
+
+def int recursive(int i):
+    if (i == 0):
+        #comment
+        puts("i es 0\n");
+        return i;
+    end
+
+    recursive(i-1);
+    puts("i es ");
+    puts(i);
+    puts("\n");
+
+    return i;
+end
+
 def int func(int arg1, int arr):
+    #comment
     int hola;
     hola = 1;
     return 0;
 end
+
+
 
 int a;
 a = 2;
@@ -18,9 +37,26 @@ if (a == 2):
     puts("\n");
 end
 
+if (a != 2):
+    puts("a es distinto de 2\n");
+else:
+    puts("a es igual a 2\n");
+end
+
 while (a != 0):
    puts("a no es 0\n");
    a = a - 1;
 end
 
 puts("a es 0\n");
+
+puts("recursive call\n");
+recursive(5);
+
+
+# bad syntax test => should fail gracefully
+if ("a" < "b"):
+    puts("a < b\n");
+else:
+    puts("a >=b\n");
+end
