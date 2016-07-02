@@ -162,10 +162,13 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 
 	private static void generateClassFile(final ClassWriter cw, final String className) {
 		byte[] classBytes = cw.toByteArray();
+		final File compileFolder = new File("compiled"); // +++xchange: do this with maven
+		compileFolder.mkdir();
+
 		try {
-			Files.write(Paths.get(className + ".class"), classBytes, StandardOpenOption.CREATE);
+			Files.write(Paths.get("compiled", className + ".class"), classBytes, StandardOpenOption.CREATE);
 		} catch (IOException e) {
-			System.out.println("Could not write Fun1.class file");
+			System.out.println("Could not write '" + className + ".class' file");
 		}
 	}
 }

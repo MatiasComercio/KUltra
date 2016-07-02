@@ -77,8 +77,9 @@ public class KUltra {
 
 		final ProgramNode programNode = (ProgramNode) programSymbolValue;
 
-		programNode.compileAs("compiled" + File.separatorChar + file.getName());
-
+		final String fileName = file.getName();
+		final String className = fileName.substring(0, fileName.indexOf(LANGUAGE_FILE_EXTENSION));
+		programNode.compileAs(className);
 	}
 
 	private static void parseFailed() {
