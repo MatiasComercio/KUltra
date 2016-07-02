@@ -58,7 +58,6 @@ public Symbol symbol(int code, Object lexem) {
     return s;
 }
 
-// +++xcheck: String
 %}
 
 

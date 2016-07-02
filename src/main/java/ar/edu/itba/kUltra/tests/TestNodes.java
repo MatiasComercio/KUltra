@@ -34,6 +34,10 @@ public class TestNodes {
 		final BodyNode mainBodyNode = new BodyNode();
 
 		/* geti test */
+		final NodeList<ExpressionNode> putsArgs2 = new NodeList<>();
+		putsArgs2.add(new MethodCallNode("geti", new NodeList<>()));
+		mainBodyNode.add(new MethodCallNode("puts", putsArgs2));
+
 		final NodeList<ExpressionNode> putsArgs = new NodeList<>();
 		putsArgs.add(new VariableNode("getiInput"));
 		mainBodyNode.add(new MethodCallNode("puts", putsArgs));

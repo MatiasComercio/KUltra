@@ -24,17 +24,18 @@ parser code {:
 	}
 :}
 
-terminal MINUS, PLUS, MULT, DIV, MOD;
+terminal MINUS, PLUS, MULT, DIV, MOD, UMINUS; // UMINUS is a terminal JUST defined for precedence purposes
 terminal AND, OR;
 terminal LT, LTEQ, GT, GTEQ, EQEQ, NOTEQ, EQ;
 terminal LPAREN, RPAREN;
 terminal SEMICOLON, COMMA, COLON;
-terminal INT, STR, VOID;
+terminal INT, STR, VOID; // +++xcheck
 terminal RETURN, DEF, END, IF, ELSE, WHILE;
 
 
 terminal Integer INTEGER;
 terminal String STRING, IDENTIFIER;
+// terminal void VOID; +++xcheck
 
 
 non terminal ProgramNode Program;
@@ -55,10 +56,15 @@ non terminal MethodCallNode MethodCall;
 non terminal NodeList<ExpressionNode> Arguments;
 non terminal LiteralNode Literal;
 
+
+precedence left Variable, MethodCall;
+precedence left RETURN;
+
 precedence left AND, OR;
-precedence left MINUS, PLUS, MULT, DIV, MOD;
-precedence left LT, LTEQ, GT, GTEQ;
-precedence left EQEQ, NOTEQ;
+precedence left LT, LTEQ, GT, GTEQ, EQEQ, NOTEQ;
+precedence left MINUS, PLUS;
+precedence left MULT, DIV, MOD;
+precedence left UMINUS;
 
 start with Program;
 
@@ -113,7 +119,7 @@ Expression              ::=             Expression:e1 MINUS Expression:e2 {: LOG
                                         | Expression:e1 GTEQ Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.GE, e1, e2); :}
                                         | Expression:e1 EQEQ Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.EQ, e1, e2); :}
                                         | Expression:e1 NOTEQ Expression:e2 {: LOGGER.debug("Expression"); RESULT = new RelationalNode(GeneratorAdapter.NE, e1, e2); :}
-                                        | MINUS Expression:e {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e); :} // +++ximprove
+                                        | MINUS Expression:e {: LOGGER.debug("Expression"); RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e); :} /* +++ximprove */ %prec UMINUS
                                         | LPAREN Expression:e RPAREN {: LOGGER.debug("Expression"); RESULT = e; :}
                                         | MethodCall:mc {: LOGGER.debug("Expression"); RESULT = mc; :}
                                         | Literal:l {: LOGGER.debug("Expression"); RESULT = l; :}

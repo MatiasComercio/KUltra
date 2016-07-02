@@ -61,13 +61,13 @@ recursive(5);
 #   puts("a >=b\n");
 #end
 
-str strGetted;
-puts("getted from gets: ");
-puts(gets());
-puts("\n");
+#str strGetted;
+#puts("getted from gets: ");
+#puts(gets());
+#puts("\n");
 
 
 int getted;
 puts("getted from geti: ");
-#puts(geti());
+puts(geti());
 puts("\n");
