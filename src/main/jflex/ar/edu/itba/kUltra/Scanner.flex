@@ -91,6 +91,7 @@ LineComment = "#" {CommentBody}
 /* keywords */
 "int"                          { System.out.println("int"); return symbol("int", INT); }
 "str"                          { System.out.println("str"); return symbol("str", STR); }
+"void"                         { System.out.println("void"); return symbol("void", VOID); }
 "return"                       { System.out.println("return"); return symbol("return", RETURN); }
 {LineComment}                  { System.out.println("COMMENT> " + yytext()); /* ignore :) */ }
 {WhiteSpace}                   { /* ignore :) */ }

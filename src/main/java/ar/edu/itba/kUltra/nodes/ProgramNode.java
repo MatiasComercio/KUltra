@@ -28,14 +28,14 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 	/**
 	 * Methods that were defined at the top, but were not processed yet, and that will be used on this program
 	 */
-	private final NodeList methodNodes;
+	private final NodeList<MethodNode> methodNodes;
 
 	/**
 	 * Body that was defined at the bottom, that conforms the actual program
 	 */
 	private final BodyNode bodyNode;
 
-	public ProgramNode(final NodeList methodNodes, final BodyNode bodyNode) {
+	public ProgramNode(final NodeList<MethodNode> methodNodes, final BodyNode bodyNode) {
 		this.methodNodes = methodNodes;
 		this.bodyNode = bodyNode;
 	}

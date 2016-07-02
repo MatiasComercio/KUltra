@@ -2,6 +2,7 @@ package ar.edu.itba.kUltra;
 
 import java_cup.runtime.*;
 import ar.edu.itba.kUltra.nodes.*;
+import ar.edu.itba.kUltra.symbols.*;
 
 parser code {:
     Scanner scanner;
@@ -23,7 +24,7 @@ terminal AND, OR;
 terminal LT, LTEQ, GT, GTEQ, EQEQ, NOTEQ, EQ;
 terminal LPAREN, RPAREN;
 terminal SEMICOLON, COMMA, COLON;
-terminal INT, STR;
+terminal INT, STR, VOID;
 terminal RETURN, DEF, END, IF, ELSE, WHILE;
 
 
@@ -32,10 +33,10 @@ terminal String STRING, IDENTIFIER;
 
 
 non terminal ProgramNode Program;
-non terminal NodeList MethodList;
+non terminal NodeList<MethodNode> MethodList;
 non terminal MethodNode Method;
 non terminal ReturnNode Return;
-non terminal NodeList Parameters; // +++xfix
+non terminal ParameterListSymbol Parameters;
 non terminal String Type;
 non terminal BodyNode StatementList;
 non terminal StatementNode Statement;
@@ -46,7 +47,7 @@ non terminal AssignmentNode Assignment;
 non terminal IfNode If;
 non terminal WhileNode While;
 non terminal MethodCallNode MethodCall;
-non terminal Node Arguments; // +++xfix
+non terminal NodeList<ExpressionNode> Arguments;
 non terminal LiteralNode Literal;
 
 precedence left AND, OR;
@@ -59,8 +60,8 @@ Program                 ::=             MethodList:ml StatementList:sl {: RESULT
                                         ;
 
 
-MethodList              ::=             Method:m MethodList:ml {: RESULT = ml; ml.add(m); :}
-                                        | /* lambda */ {: RESULT = new NodeList(); :}
+MethodList              ::=             Method:m MethodList:ml {: ml.add(m); RESULT = ml; :}
+                                        | /* lambda */ {: RESULT = new NodeList<>(); :}
                                         ;
 
 Method                  ::=             DEF Type:t IDENTIFIER:i LPAREN Parameters:p RPAREN COLON StatementList:sl END
@@ -70,17 +71,18 @@ Method                  ::=             DEF Type:t IDENTIFIER:i LPAREN Parameter
 Return                  ::=             RETURN Expression:e SEMICOLON {: RESULT = new ReturnNode(e); :}
                                         ;
 
-Parameters              ::=             Type:t IDENTIFIER:i COMMA Parameters:p {: RESULT = p; p.add(new ParameterNode(t, i)); :}
-                                        | Type IDENTIFIER:i {: RESULT = new ParameterNode(t, i); :}
-                                        | /* lambda */ {: RESULT = new NodeList(); :}
+Parameters              ::=             Type:t IDENTIFIER:i COMMA Parameters:p {: p.add(new ParameterNode(t, i)); RESULT = p; :}
+                                        | Type IDENTIFIER:i {: RESULT = new ParameterListSymbol(); RESULT.addParameter(t, i); :}
+                                        | /* lambda */ {: RESULT = new ParameterListSymbol(); :}
                                         ;
 
-Type                    ::=             INT {: RESULT ="int"; :}
-                                        | STR {: RESULT ="str"; :}
-                                        ; /* +++xtodo: VOID ("void") */
+Type                    ::=             INT {: RESULT ="Integer"; :}
+                                        | STR {: RESULT ="String"; :}
+                                        | VOID {: RESULT ="void"; :}
+                                        ;
 
-StatementList           ::=             Statement:s StatementList:sl  {: RESULT = sl; sl.add(s); :}
-                                        | /* lambda */ {: RESULT = new NodeList(); :}
+StatementList           ::=             Statement:s StatementList:sl  {: sl.add(s); RESULT = sl; :}
+                                        | /* lambda */ {: RESULT = new BodyNode(); :}
                                         ;
 
 Statement               ::=             VarDeclaration:vd {: RESULT = vd; :}
@@ -103,7 +105,7 @@ Expression              ::=             Expression:e1 MINUS Expression:e2 {: RES
                                         | Expression:e1 GTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.GE, e1, e2); :}
                                         | Expression:e1 EQEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.EQ, e1, e2); :}
                                         | Expression:e1 NOTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.NE, e1, e2); :}
-                                        | MINUS Expression:e {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e2); :}
+                                        | MINUS Expression:e {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e); :} // +++ximprove
                                         | LPAREN Expression:e RPAREN {: RESULT = e; :}
                                         | MethodCall:mc {: RESULT = mc; :}
                                         | Literal:l {: RESULT = l; :}
@@ -131,9 +133,9 @@ While                   ::=             WHILE LPAREN Expression:c RPAREN COLON S
 MethodCall              ::=             IDENTIFIER:i LPAREN Arguments:a RPAREN SEMICOLON {: RESULT = new MethodCallNode(i, a); :}
                                         ;
 
-Arguments               ::=             IDENTIFIER:i COMMA Arguments:a {: RESULT = a; a.add(new ArgumentNode(i, a.size())); :}
-                                        | IDENTIFIER:i {: RESULT = new ArgumentNode(i, 0); :}
-                                        | /* lambda */ {: RESULT = new NodeList(); :}
+Arguments               ::=             Expression:e COMMA Arguments:a {: a.add(new ArgumentNode(i, a.size())); RESULT = a;  :}
+                                        | Expression:e {: RESULT = new NodeList<>(); RESULT.add(e); :}
+                                        | /* lambda */ {: RESULT = new NodeList<>(); :}
                                         ;
 
 Literal                 ::=             INTEGER:n {: RESULT = new LiteralNode<>(n); :}
