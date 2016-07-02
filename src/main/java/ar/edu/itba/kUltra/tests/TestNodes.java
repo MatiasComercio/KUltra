@@ -4,6 +4,7 @@ import ar.edu.itba.kUltra.nodes.*;
 import ar.edu.itba.kUltra.symbols.ParameterListSymbol;
 import org.objectweb.asm.commons.GeneratorAdapter;
 
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,11 +18,10 @@ public class TestNodes {
 
 	private static NodeList<MethodNode> generateMethods() {
 
-		final List<StatementNode> helloWorldStatementNodes = new LinkedList<>();
-		helloWorldStatementNodes.add(new MethodCallNode("puts",
+		final BodyNode helloWorldBodyNode = new BodyNode();
+		helloWorldBodyNode.add(new ReturnNode(null));
+		helloWorldBodyNode.add(new MethodCallNode("puts",
 				putsArgument("Hello world from 'helloWorld' method!\n")));
-		helloWorldStatementNodes.add(new ReturnNode(null));
-		final BodyNode helloWorldBodyNode = new BodyNode(helloWorldStatementNodes);
 
 		final MethodNode helloWorldMethodNode = new MethodNode("void", "helloWorld", new ParameterListSymbol(), helloWorldBodyNode);
 
@@ -31,99 +31,96 @@ public class TestNodes {
 	}
 
 	private static BodyNode generateMainBody() {
+		final BodyNode mainBodyNode = new BodyNode();
 
-		final List<StatementNode> statementNodes = new LinkedList<>();
-
-		final DeclarationNode iDeclare = new DeclarationNode("int", "i");
-		statementNodes.add(iDeclare);
-
-		final DeclarationNode a1Declare = new DeclarationNode("int", "a1");
-		statementNodes.add(a1Declare);
-
-		final DeclarationNode a2Declare = new DeclarationNode("int", "a2");
-		statementNodes.add(a2Declare);
-
-		final LiteralNode<Integer> a1Value = new LiteralNode<>(5);
-		final AssignmentNode a1Assignment = new AssignmentNode("a1", a1Value);
-		statementNodes.add(a1Assignment);
-
-		final LiteralNode<Integer> a2Value = new LiteralNode<>(3);
-		final AssignmentNode a2Assignment = new AssignmentNode("a2", a2Value);
-		statementNodes.add(a2Assignment);
-
-		final VariableNode a1 = new VariableNode("a1");
-		final VariableNode a2 = new VariableNode("a2");
-		final ArithmeticNode addNode = new ArithmeticNode(GeneratorAdapter.ADD, a1, a2);
-		final AssignmentNode assignmentNode = new AssignmentNode("i", addNode);
-		statementNodes.add(assignmentNode);
+		/* helloWorld call */
+		mainBodyNode.add(generateHelloWorldCall());
 
 		final VariableNode i = new VariableNode("i");
-		final NodeList<ExpressionNode> argumentNodes = new NodeList<>();
-		argumentNodes.add(i);
-		final MethodCallNode putsMethod = new MethodCallNode("puts", argumentNodes);
-		statementNodes.add(putsMethod);
+		/* while statement */
+		final ExpressionNode whileCondition = new RelationalNode(GeneratorAdapter.LT, i, new LiteralNode<>(18));
 
-		/* puts("\n"); */
-		statementNodes.add(new MethodCallNode("puts", putsArgument("\n")));
+		final BodyNode whileBodyNode = new BodyNode();
+		whileBodyNode.add(new MethodCallNode("puts", putsArgument("\n")));
+		whileBodyNode.add(new MethodCallNode("puts", putsArgument(i)));
+		whileBodyNode.add(new AssignmentNode("i", new ArithmeticNode(GeneratorAdapter.ADD, i, new LiteralNode<>(1))));
 
-		/* get input and print it with another message */
-		statementNodes.add(new DeclarationNode("str", "s"));
+		final StatementNode whileNode = new WhileNode(whileCondition, whileBodyNode);
+		mainBodyNode.add(whileNode);
+		/* END of while statement */
 
-		final AssignmentNode getsAssignment = new AssignmentNode("s", new MethodCallNode("gets", null));
-		statementNodes.add(getsAssignment);
-
-		/*
+				/*
 			if (i < 18) {
-				printGetInput(statementNodes);
+				printGetInput(mainBodyNode);
 			} else {
-				statementNodes.add(new MethodCallNode("puts", putsArgument("i>= 18\n")));
+				mainBodyNode.add(new MethodCallNode("puts", putsArgument("i>= 18\n")));
 			}
 		 */
 
 		final ExpressionNode condition = new RelationalNode(GeneratorAdapter.LT, i, new LiteralNode<>(18));
 
-		final List<StatementNode> ifBodyStatementNodes = new LinkedList<>();
-		printGetInput(ifBodyStatementNodes);
-		final BodyNode ifBodyNode = new BodyNode(ifBodyStatementNodes);
+		final BodyNode ifBodyNode = new BodyNode();
+		printGetInput(ifBodyNode);
 
-		final List<StatementNode> elseBodyStatementNodes = new LinkedList<>();
-		elseBodyStatementNodes.add(new MethodCallNode("puts", putsArgument("i>= 18\n")));
-		final BodyNode elseBodyNode = new BodyNode(elseBodyStatementNodes);
+
+		final BodyNode elseBodyNode = new BodyNode();
+		elseBodyNode.add(new MethodCallNode("puts", putsArgument("i>= 18\n")));
 
 		final StatementNode ifNode = new IfNode(condition, ifBodyNode, elseBodyNode);
-		statementNodes.add(ifNode);
-//		printGetInput(statementNodes);
+		mainBodyNode.add(ifNode);
+//		printGetInput(mainBodyNode);
 
+		final AssignmentNode getsAssignment = new AssignmentNode("s", new MethodCallNode("gets", null));
+		mainBodyNode.add(getsAssignment);
 
-		/* while statement */
-		final ExpressionNode whileCondition = new RelationalNode(GeneratorAdapter.LT, i, new LiteralNode<>(18));
+		/* get input and print it with another message */
+		mainBodyNode.add(new DeclarationNode("String", "s"));
 
-		final List<StatementNode> whileBodyStatementNodes = new LinkedList<>();
-		whileBodyStatementNodes.add(new AssignmentNode("i", new ArithmeticNode(GeneratorAdapter.ADD, i, new LiteralNode<>(1))));
-		whileBodyStatementNodes.add(new MethodCallNode("puts", putsArgument(i)));
-		whileBodyStatementNodes.add(new MethodCallNode("puts", putsArgument("\n")));
+		/* puts("\n"); */
+		mainBodyNode.add(new MethodCallNode("puts", putsArgument("\n")));
 
-		final StatementNode whileNode = new WhileNode(whileCondition, new BodyNode(whileBodyStatementNodes));
-		statementNodes.add(whileNode);
-		/* END of while statement */
+		final NodeList<ExpressionNode> argumentNodes = new NodeList<>();
+		argumentNodes.add(i);
+		final MethodCallNode putsMethod = new MethodCallNode("puts", argumentNodes);
+		mainBodyNode.add(putsMethod);
 
-		/* helloWorld call */
-		statementNodes.add(generateHelloWorldCall());
+		final VariableNode a1 = new VariableNode("a1");
+		final VariableNode a2 = new VariableNode("a2");
+		final ArithmeticNode addNode = new ArithmeticNode(GeneratorAdapter.ADD, a1, a2);
+		final AssignmentNode assignmentNode = new AssignmentNode("i", addNode);
+		mainBodyNode.add(assignmentNode);
 
-		return new BodyNode(statementNodes);
+		final LiteralNode<Integer> a2Value = new LiteralNode<>(3);
+		final AssignmentNode a2Assignment = new AssignmentNode("a2", a2Value);
+		mainBodyNode.add(a2Assignment);
+
+		final LiteralNode<Integer> a1Value = new LiteralNode<>(5);
+		final AssignmentNode a1Assignment = new AssignmentNode("a1", a1Value);
+		mainBodyNode.add(a1Assignment);
+
+		final DeclarationNode a2Declare = new DeclarationNode("Integer", "a2");
+		mainBodyNode.add(a2Declare);
+
+		final DeclarationNode a1Declare = new DeclarationNode("Integer", "a1");
+		mainBodyNode.add(a1Declare);
+
+		final DeclarationNode iDeclare = new DeclarationNode("Integer", "i");
+		mainBodyNode.add(iDeclare);
+
+		return mainBodyNode;
 	}
 
 	private static StatementNode generateHelloWorldCall() {
 		return new MethodCallNode("helloWorld", null);
 	}
 
-	private static void printGetInput(final List<StatementNode> statementNodes) {
-		/* puts("\nThis is what was captured: "); */
-		statementNodes.add(new MethodCallNode("puts", putsArgument("\nThis is what was captured: ")));
-		/* prints what was captured (it was saved at "s") */
-		statementNodes.add(new MethodCallNode("puts", putsArgument(new VariableNode("s"))));
+	private static void printGetInput(final BodyNode statementNodes) {
 		/* puts("\n"); */
 		statementNodes.add(new MethodCallNode("puts", putsArgument("\n")));
+		/* prints what was captured (it was saved at "s") */
+		statementNodes.add(new MethodCallNode("puts", putsArgument(new VariableNode("s"))));
+		/* puts("\nThis is what was captured: "); */
+		statementNodes.add(new MethodCallNode("puts", putsArgument("\nThis is what was captured: ")));
 	}
 
 	private static NodeList<ExpressionNode> putsArgument(final Object o) {

@@ -2,28 +2,19 @@ package ar.edu.itba.kUltra.nodes;
 
 import ar.edu.itba.kUltra.helpers.Context;
 
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class NodeList<T extends Node> implements Node {
-	private final List<T> nodeList;
+	private final Deque<T> nodeList;
 
 	public NodeList() {
-		nodeList = new LinkedList<>();
+		nodeList = new LinkedList<T>();
 	}
 
-	public boolean add(final T node) {
-		return nodeList.add(node);
+	public void add(final T node) {
+		nodeList.push(node);
 	}
 
-	public boolean addAll(final Collection<T> c) {
-		return nodeList.addAll(c);
-	}
-
-	public List<T> getNodeList() {
-		return nodeList;
-	}
 
 	@Override
 	public void process(final Context context) {
