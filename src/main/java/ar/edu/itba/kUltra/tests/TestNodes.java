@@ -10,7 +10,7 @@ public class TestNodes {
 
 		final ProgramNode programNode = new ProgramNode(generateMethods(), generateMainBody());
 
-		programNode.compileAs("TestNodes");
+		programNode.compileAs("TestNodes", "compiled");
 	}
 
 	private static NodeList<MethodNode> generateMethods() {

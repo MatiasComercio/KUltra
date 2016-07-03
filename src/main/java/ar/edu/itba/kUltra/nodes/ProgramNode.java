@@ -22,7 +22,7 @@ import static org.objectweb.asm.Opcodes.*;
 import static org.objectweb.asm.Opcodes.ACC_PUBLIC;
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
 
-public class ProgramNode /* +++xcheck: should implement Node? */ {
+public class ProgramNode /* it is not necessary that it implements Node, no process method is needed */ {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ProgramNode.class);
 	private static final String OBJECT_INTERNAL_NAME = "java/lang/Object";
 	private static final String MAIN_METHOD_SIGNATURE = "void main (String[])";
@@ -42,7 +42,7 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		this.bodyNode = bodyNode;
 	}
 
-	public void compileAs(final String className) {
+	public void compileAs(final String className, final String destinationFolder) {
 		/* generate class */
 		ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
 		cw.visit(V1_1, ACC_PUBLIC, className, null, OBJECT_INTERNAL_NAME, null);
@@ -59,7 +59,7 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 
 		generateMainMethod(cw, definedMethods);
 
-		generateClassFile(cw, className);
+		generateClassFile(cw, className, destinationFolder);
 	}
 
 	private void generatePredefinedMethods(final ClassWriter cw, final DefinedMethods definedMethods, final String className) {
@@ -143,7 +143,7 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		mg.storeLocal(e);
 		mg.visitInsn(ACONST_NULL);
 		mg.visitInsn(ARETURN);
-		mg.visitMaxs(5, 3); /* +++xcheck: should be removed because of the COMPUTE_MAXS */
+		mg.visitMaxs(5, 3); /* could be removed because of the COMPUTE_MAXS, but it is working => not changing it */
 
 		mg.endMethod();
 		mg.visitEnd();
@@ -185,7 +185,8 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 
 	private void generateAuxiliaryMethods(final ClassWriter cw, final DefinedMethods definedMethods) {
 
-		final Context context = new Context(cw, null, null, definedMethods, null); /* +++ximprove: works, but it is not cool */
+		/* Context can be improved; works, but it is not cool */
+		final Context context = new Context(cw, null, null, definedMethods, null);
 		if (methodNodes != null) {
 			methodNodes.process(context);
 		}
@@ -212,19 +213,19 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		mg.visitEnd();
 	}
 
-	private static void generateClassFile(final ClassWriter cw, final String className) {
+	private static void generateClassFile(final ClassWriter cw, final String className, final String destinationFolder) {
 		byte[] classBytes = cw.toByteArray();
-		final File compileFolder = new File("compiled"); // +++xchange: do this with maven
-		compileFolder.mkdir();
+		final File compileFolder = new File(destinationFolder); // +++xchange: do this with maven
+		compileFolder.mkdirs(); // tries to make directories for the .class destination
 
 		/* delete previous .class file, if any */
-		final Path pathToFileClass = Paths.get("compiled", className + ".class");
+		final Path pathToFileClass = Paths.get(destinationFolder, className + ".class");
 		try {
 			Files.deleteIfExists(pathToFileClass);
 		} catch (IOException e) {
 			LOGGER.warn("Could not delete previous .class file: '{}'. Caused by: ", pathToFileClass, e);
 			System.out.println("Could not delete previous .class file: '" + pathToFileClass + "'.\n" +
-					"So, new .class could not be saved. Aborting...");
+					"New .class could not be saved. Aborting...");
 			return;
 		}
 
@@ -232,7 +233,8 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		try {
 			Files.write(pathToFileClass, classBytes, StandardOpenOption.CREATE);
 		} catch (IOException e) {
-			System.out.println("Could not write '" + className + ".class' file");
+			LOGGER.warn("Could not write '{}.class' file. Caused by: ", className, e);
+			System.out.println("An unknown error occurred while writing '" + className + ".class' file. Aborting...");
 		}
 	}
 

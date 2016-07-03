@@ -18,11 +18,12 @@ public class KUltra {
 	private static final int PARSE_FAILED = 3;
 	private static final String COMPILE_OP = "compile";
 	private static final String LANGUAGE_FILE_EXTENSION = ".kul";
+	private static final String DEFAULT_DESTINATION_FOLDER = "compiled";
 
 	// args[0] should contain the String 'compile'
 	// args[1] should contain the String path to the file to be compiled
 	public static void main(String[] args) {
-		if (args.length != 2) {
+		if (args.length < 2 || args.length > 3) {
 			executionFailed();
 		}
 
@@ -38,7 +39,14 @@ public class KUltra {
 			invalidFilePath(pathToFile);
 		}
 
-		compile(file);
+		final String destinationFolder;
+		if (args.length == 3) {
+			destinationFolder = args[2];
+		} else {
+			destinationFolder = DEFAULT_DESTINATION_FOLDER;
+		}
+
+		compile(file, destinationFolder);
 	}
 
 	private static void invalidFilePath(final String pathToFile) {
@@ -46,7 +54,7 @@ public class KUltra {
 		System.exit(INVALID_FILE_PATH);
 	}
 
-	private static void compile(final File file) {
+	private static void compile(final File file, final String destinationFolder) { // +++ximprove: exception security
 		final ComplexSymbolFactory complexSymbolFactory = new ComplexSymbolFactory();
 		final Scanner scanner;
 		try {
@@ -79,7 +87,7 @@ public class KUltra {
 
 		final String fileName = file.getName();
 		final String className = fileName.substring(0, fileName.indexOf(LANGUAGE_FILE_EXTENSION));
-		programNode.compileAs(className);
+		programNode.compileAs(className, destinationFolder);
 	}
 
 	private static void parseFailed() {
