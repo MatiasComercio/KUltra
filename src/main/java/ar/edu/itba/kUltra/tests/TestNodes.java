@@ -30,6 +30,9 @@ public class TestNodes {
 	private static BodyNode generateMainBody() {
 		final BodyNode mainBodyNode = new BodyNode();
 
+		/* test logical nodes */
+		generateTestsForLogicalNodes(mainBodyNode);
+
 		/* geti test */
 		final NodeList<ExpressionNode> putsArgs2 = new NodeList<>();
 		putsArgs2.add(new MethodCallNode("geti", new NodeList<>()));
@@ -116,6 +119,70 @@ public class TestNodes {
 		mainBodyNode.add(iDeclare);
 
 		return mainBodyNode;
+	}
+
+	private static void generateTestsForLogicalNodes(final BodyNode mainBodyNode) {
+
+		/* integrity test */
+		/*
+			if (!(! ((true && false) || true))) {
+				sout("logic is ok");
+			} else {
+				sout("sth is wrong here...");
+			}
+		 */
+		final BodyNode ifBodyNode = new BodyNode();
+		ifBodyNode.add(new MethodCallNode("puts", putsArgument("\n\nintegrity test logic is ok\n\n"))); // expecting true
+
+		final BodyNode elseBodyNode = new BodyNode();
+		elseBodyNode.add(new MethodCallNode("puts", putsArgument("\n\nsth is wrong with the integrity test...\n\n")));
+		mainBodyNode.add(
+				new IfNode(
+						/* condition */
+						new NotLogicalNode(new NotLogicalNode(
+								new BinaryLogicalNode(GeneratorAdapter.OR,
+										new BinaryLogicalNode(GeneratorAdapter.AND,
+												new LiteralNode<>(true), new LiteralNode<>(false)
+										), new LiteralNode<>(true)
+								)
+						)),
+						/* true body */
+						ifBodyNode
+						,
+						/* false body */
+						elseBodyNode
+				)
+		);
+
+
+
+		/***********************************************************************/
+
+		/* not test */
+		final BodyNode notIfBodyNode = new BodyNode();
+		notIfBodyNode.add(new MethodCallNode("puts", putsArgument("\n\nnot logic is ok\n\n")));
+
+		final BodyNode notElseBodyNode = new BodyNode();
+		notElseBodyNode.add(new MethodCallNode("puts", putsArgument("\n\nsth is wrong with not...\n\n")));
+		mainBodyNode.add(new IfNode(new NotLogicalNode(new LiteralNode<>(false)), notIfBodyNode, notElseBodyNode));
+
+		/* and test */
+		final BodyNode andIfBodyNode = new BodyNode();
+		andIfBodyNode.add(new MethodCallNode("puts", putsArgument("\n\nsth is wrong with and...\n\n"))); // expecting false
+
+		final BodyNode andElseBodyNode = new BodyNode();
+		andElseBodyNode.add(new MethodCallNode("puts", putsArgument("\n\nand logic is ok\n\n")));
+		mainBodyNode.add(new IfNode(new BinaryLogicalNode(GeneratorAdapter.AND, new LiteralNode<>(true), new LiteralNode<>(false)), andIfBodyNode, andElseBodyNode));
+
+
+		/* or test */
+		final BodyNode orIfBodyNode = new BodyNode();
+		orIfBodyNode.add(new MethodCallNode("puts", putsArgument("\n\nor logic is ok\n\n"))); // expecting true
+
+		final BodyNode orElseBodyNode = new BodyNode();
+		orElseBodyNode.add(new MethodCallNode("puts", putsArgument("\n\nsth is wrong with or...\n\n")));
+		mainBodyNode.add(new IfNode(new BinaryLogicalNode(GeneratorAdapter.OR, new LiteralNode<>(false), new LiteralNode<>(true)), orIfBodyNode, orElseBodyNode));
+
 	}
 
 	private static StatementNode generateHelloWorldCall() {

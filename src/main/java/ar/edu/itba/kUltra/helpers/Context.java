@@ -154,6 +154,10 @@ public class Context {
 		mg.push(value);
 	}
 
+	public void push(final boolean value) {
+		mg.push(value);
+	}
+
 	/**
 	 *
 	 * @param type The type that has to be left on the top of the stack

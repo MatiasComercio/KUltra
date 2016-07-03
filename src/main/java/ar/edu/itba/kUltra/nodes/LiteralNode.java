@@ -31,6 +31,11 @@ public class LiteralNode<T> implements ExpressionNode {
 			return;
 		}
 
+		if (value instanceof Boolean) {
+			context.push((Boolean) value);
+			return;
+		}
+
 		throw new IllegalArgumentException("Not a valid type");
 	}
 
