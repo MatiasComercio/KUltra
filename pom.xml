@@ -144,21 +144,6 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-<!--            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>${maven-jar-plugin.version}</version>
-                <configuration>
-                    <excludes>
-                        <packagingExcludes>**/logback-test.xml</packagingExcludes>
-                    </excludes>
-                    <archive>
-                        <manifest>
-                            <mainClass>ar.edu.itba.kUltra.KUltra</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
-            </plugin>-->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -186,5 +171,14 @@
                 </configuration>
             </plugin>
         </plugins>
+        <!-- Exclude logback-test.xml -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <excludes>
+                    <exclude>logback-test.xml</exclude>
+                </excludes>
+            </resource>
+        </resources>
     </build>
 </project>
