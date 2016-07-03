@@ -82,7 +82,7 @@ LineComment = "#" {CommentBody}
 
 
 /* string and character literals */
-StringCharacter = [^\r\n(\"|\')\\]
+StringCharacter = [^\r\n(\")\\]
 OctDigit          = [0-7]
 
 %state STATE_STRING
@@ -140,7 +140,7 @@ OctDigit          = [0-7]
 }
 
 <STATE_STRING> {
-    \"|\'                          { LOGGER.debug("\"");  yybegin(YYINITIAL); return symbol(STRING, string.toString()); }
+    \"                             { LOGGER.debug("\"");  yybegin(YYINITIAL); return symbol(STRING, string.toString()); }
 
     {StringCharacter}+             { string.append( yytext() ); }
 

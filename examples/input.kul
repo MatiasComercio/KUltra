@@ -9,7 +9,7 @@ def int recursive(int i):
 
     recursive(i-1);
     puts("i es ");
-    puts(i);
+    puti(i);
     puts("\n");
 
     return i;
