@@ -8,12 +8,18 @@ This project was build with the help of CUP, JFlex and ASM Libraries.
 ## Build
 To generate the KUltra compiler, you should download this project, and
 once on the same folder as the main's pom file, execute:
-<code>mvn clean package</code>
+
+    $ mvn clean package
 
 ## Usage
 To compile a .kul file, get the KUltra-jar-with-dependencies.jar
 generated with the above command (should be on folder 'target'),
 and run:
-<code>java -jar KUltra-jar-with-dependencies.jar compile path/to/.kul destination/path</code>,
-where <code>destination/path</code> is an optional parameter; default destination path is the 
-folder 'compiled' inside the root directory of this project.
+
+    $ java -jar KUltra-jar-with-dependencies.jar compile <path/to/.kul> <destination/path>
+  , where 
+
+    <destination/path>
+  
+  is an optional parameter; default destination path is the 
+  folder 'compiled' inside the root directory of this project.
