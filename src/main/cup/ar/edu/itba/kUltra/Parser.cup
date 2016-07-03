@@ -24,13 +24,13 @@ terminal AND, OR, NOT;
 terminal LT, LTEQ, GT, GTEQ, EQEQ, NOTEQ, EQ;
 terminal LPAREN, RPAREN;
 terminal SEMICOLON, COMMA, COLON;
-terminal INT, STR, VOID; // +++xcheck
+terminal INT, STR, VOID; // +++xcheck CHECKED
 terminal RETURN, DEF, END, IF, ELSE, WHILE;
 
 
 terminal Integer INTEGER;
 terminal String STRING, IDENTIFIER;
-// terminal void VOID; +++xcheck
+// terminal void VOID; +++xcheck CHECKED
 
 
 non terminal ProgramNode Program;
@@ -113,7 +113,7 @@ Expression              ::=             Expression:e1 MINUS Expression:e2 {: RES
                                         | Expression:e1 GTEQ Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.GE, e1, e2); LOGGER.debug("{}", RESULT); :}
                                         | Expression:e1 EQEQ Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.EQ, e1, e2); LOGGER.debug("{}", RESULT); :}
                                         | Expression:e1 NOTEQ Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.NE, e1, e2); LOGGER.debug("{}", RESULT); :}
-                                        | MINUS Expression:e {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e); LOGGER.debug("{}", RESULT); :} /* +++ximprove */ %prec UMINUS
+                                        | MINUS Expression:e {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e); LOGGER.debug("{}", RESULT); :} %prec UMINUS
                                         | LPAREN Expression:e RPAREN {: RESULT = e; LOGGER.debug("Expression - {}", RESULT); :}
                                         | MethodCall:mc {: RESULT = mc; LOGGER.debug("Expression - {}", RESULT); :}
                                         | Literal:l {: RESULT = l; LOGGER.debug("Expression - {}", RESULT); :}

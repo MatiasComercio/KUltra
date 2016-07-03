@@ -136,7 +136,7 @@ OctDigit          = [0-7]
     {Identifier}                   { LOGGER.debug("{}", yytext()); return symbol(yytext(), IDENTIFIER, yytext()); }
 
     /* error fallback */
-    [^]                            { /* +++xcheck */ }
+    [^]                            { /* +++xcheck CHECKED: NOT CAUSING PROBLEMS => LEFT INTACT */ }
 }
 
 <STATE_STRING> {

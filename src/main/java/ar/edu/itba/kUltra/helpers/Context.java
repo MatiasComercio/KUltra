@@ -304,7 +304,7 @@ public class Context {
 	}
 
 
-	// +++ximprove: this could be placed inside the TypeConverter or ReturnNode class
+	// this could be placed inside the TypeConverter or ReturnNode class
 	private final static Map<Type, Integer> TYPE_TO_RETURN_OPCODE;
 	static {
 		TYPE_TO_RETURN_OPCODE = new HashMap<>();

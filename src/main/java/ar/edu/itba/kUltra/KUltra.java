@@ -55,7 +55,7 @@ public class KUltra {
 		System.exit(INVALID_FILE_PATH);
 	}
 
-	private static void compile(final File file, final String destinationFolder) { // +++ximprove: exception security
+	private static void compile(final File file, final String destinationFolder) {
 		final ComplexSymbolFactory complexSymbolFactory = new ComplexSymbolFactory();
 		final Scanner scanner;
 		try {
@@ -91,7 +91,7 @@ public class KUltra {
 		final String className = fileName.substring(0, fileName.indexOf(LANGUAGE_FILE_EXTENSION));
 		try {
 			programNode.compileAs(className, destinationFolder);
-		} catch (CompileException e) {
+		} catch (CompileException e) { // own defied exception
 			LOGGER.warn("A compiled exception occurred. Caused by: ", e);
 			System.out.println("[FAIL] - Reason: " + e.getMessage());
 			System.out.println("Aborting compiler...");

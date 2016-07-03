@@ -37,7 +37,6 @@ public class RelationalNode implements OperationNode {
 //		context.unbox(type);
 		e2.process(context);
 //		context.unbox(type);
-		// +++xcheck
 		context.conditionOp(type, operation);
 	}
 
