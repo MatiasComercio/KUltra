@@ -1,0 +1,233 @@
+def void printRow(int n1, int n2, int n3):
+	if (n1 == -10):
+		puts("-");
+	else:
+		if (n1 == 10):
+			puts("X");
+		else:
+			puti(n1);
+		end
+	end
+	puts("|");
+	if (n2 == -10):
+		puts("-");
+	else:
+		if (n2 == 10):
+			puts("X");
+		else:
+			puti(n2);
+		end
+	end
+	puts("|");
+	if (n3 == -10):
+		puts("-");
+	else:
+		if (n3 == 10):
+			puts("X");
+		else:
+			puti(n3);
+		end
+	end
+	puts("\n");
+	return;
+end
+
+# Returns 0 if no winner, the player's number that won, or 1 in case there is a draw
+def int evaluateEnd(int board_1x1, int board_1x2, int board_1x3,
+                       int board_2x1, int board_2x2, int board_2x3,
+                       int board_3x1, int board_3x2, int board_3x3):
+    # first row
+    if (board_1x1 == board_1x2 and board_1x2 == board_1x3):
+    	return board_1x1;
+    end
+
+    # second row
+    if (board_2x1 == board_2x2 and board_2x2 == board_2x3):
+    	return board_2x1;
+    end
+
+    # third row
+    if (board_3x1 == board_3x2 and board_3x2 == board_3x3):
+    	return board_3x1;
+    end
+
+    # first column
+    if (board_1x1 == board_2x1 and board_2x1 == board_3x1):
+    	return board_1x1;
+    end
+    
+    # second column
+    if (board_1x2 == board_2x2 and board_2x2 == board_3x2):
+    	return board_1x2;
+    end
+
+    # third column
+    if (board_1x3 == board_2x3 and board_2x3 == board_3x3):
+    	return board_1x3;
+    end
+
+    # diagonal from top-left to bottom-right
+    if (board_1x1 == board_2x2 and board_2x2 == board_3x3):
+    	return board_1x1;
+    end
+
+    # diagonal from top-right to bottom-left
+	if (board_1x3 == board_2x2 and board_2x2 == board_3x1):
+    	return board_1x3;
+    end
+
+    # test if match has finished due to a draw (all table complete without a winner)
+    if ((board_1x1 == 10 or board_1x1 == -10)
+    	and
+    	(board_1x2 == 10 or board_1x2 == -10)
+    	and
+    	(board_1x3 == 10 or board_1x3 == -10)
+    	and
+    	(board_2x1 == 10 or board_2x1 == -10)
+    	and
+    	(board_2x2 == 10 or board_2x2 == -10)
+    	and
+    	(board_2x3 == 10 or board_2x3 == -10)
+    	and
+    	(board_3x1 == 10 or board_3x1 == -10)
+    	and
+    	(board_3x2 == 10 or board_3x2 == -10)
+    	and
+    	(board_3x3 == 10 or board_3x3 == -10)
+    ):
+    	return 1;
+    end
+
+    return 0;
+end
+
+int board_1x1;
+board_1x1 = 1;
+int board_1x2;
+board_1x2 = 2;
+int board_1x3;
+board_1x3 = 3;
+int board_2x1;
+board_2x1 = 4;
+int board_2x2;
+board_2x2 = 5;
+int board_2x3;
+board_2x3 = 6;
+int board_3x1;
+board_3x1 = 7;
+int board_3x2;
+board_3x2 = 8;
+int board_3x3;
+board_3x3 = 9;
+int player;
+# player 10 use 'X' symbol; player -10 use '-' symbol
+player = 10;
+int position;
+int keep;
+keep = 1;
+int finished;
+finished = 0;
+while(keep == 1 or keep == -1):
+	printRow(board_1x1, board_1x2, board_1x3);
+	printRow(board_2x1, board_2x2, board_2x3);
+	printRow(board_3x1, board_3x2, board_3x3);
+
+    if (finished):
+    	if (finished == 1):
+    		puts ("**********************\nDRAW\n**********************\n");
+	    	return;
+    	else:
+	    	if (finished == 10):
+	    		puts ("**********************\nPlayer 'X' WINS\n**********************\n");
+	    		return;
+	    	else:
+	    		puts ("**********************\nPlayer '-' WINS\n**********************\n");
+	    		return;
+	    	end
+	    end
+    end 
+
+    if (player == 10):
+        puts("Player 'X' plays\n");
+    else:
+        puts("Player '-' plays\n");
+    end
+	puts("Enter position (from 1 to 9) or '10' to end the game: ");
+	position = geti();
+	puts("\n");
+	if (position == 10):
+		keep = 0;
+	else:
+		keep = -1;
+		if (position == 1):
+			if (board_1x1 == 1):
+				board_1x1 = player;
+				keep = 1;
+			end
+		else:
+			if (position == 2):
+				if (board_1x2 == 2):
+					board_1x2 = player;
+					keep = 1;
+				end
+			else:
+				if (position == 3):
+					if (board_1x3 == 3):
+						board_1x3 = player;
+						keep = 1;
+					end
+				else:
+					if (position == 4):
+						if (board_2x1 == 4):
+							board_2x1 = player;
+							keep = 1;
+						end
+					else:
+						if (position == 5):
+							if (board_2x2 == 5):
+								board_2x2 = player;
+								keep = 1;
+							end
+						else:
+							if (position == 6):
+								if (board_2x3 == 6):
+									board_2x3 = player;
+									keep = 1;
+								end
+							else:
+								if (position == 7):
+									if (board_3x1 == 7):
+										board_3x1 = player;
+										keep = 1;
+									end
+								else:
+									if (position == 8):
+										if (board_3x2 == 8):
+											board_3x2 = player;
+											keep = 1;
+										end
+									else:
+										if (position == 9):
+											if (board_3x3 == 9):
+												board_3x3 = player;
+												keep = 1;
+											end
+										end
+									end
+								end
+							end
+						end
+					end
+				end
+			end
+		end
+		if (keep == 1):
+			# evaluate a possible end
+		    finished = evaluateEnd(board_1x1, board_1x2, board_1x3,
+		                            board_2x1, board_2x2, board_2x3,
+		                            board_3x1, board_3x2, board_3x3);
+		    # the other player's turn
+		    player = -player;
+		end
+	end
+end
