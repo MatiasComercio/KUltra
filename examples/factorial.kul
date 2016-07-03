@@ -9,5 +9,5 @@ int number;
 puts("Enter a number: ");
 number = geti();
 puts("The factorial number is: ");
-puts(factorial(number));
+puti(factorial(number));
 puts("\n");

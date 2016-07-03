@@ -9,5 +9,5 @@ puts("Enter a number: ");
 int number;
 number = geti();
 puts("The fibonacci number is: ");
-puts(fibonacci(number));
+puti(fibonacci(number));
 puts("\n");

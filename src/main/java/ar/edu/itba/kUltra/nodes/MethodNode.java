@@ -20,7 +20,7 @@ public class MethodNode implements Node {
 	 * @param bodyNode
 	 */
 	public MethodNode(final String returnType, final String identifier, final ParameterListSymbol parameterListSymbol, final BodyNode bodyNode) {
-		this.javaType = returnType;
+		this.javaType = TypeConverter.getUnboxedTypeString(returnType);
 		this.returnType = TypeConverter.getType(returnType);
 		this.identifier = identifier;
 		this.parameterListSymbol = parameterListSymbol;

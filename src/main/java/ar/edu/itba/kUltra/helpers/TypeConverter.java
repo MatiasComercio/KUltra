@@ -21,4 +21,19 @@ public abstract class TypeConverter {
 		}
 		return type;
 	}
+
+
+	private static final Map<String, String> BOX_TO_UNBOX_MAP;
+	static {
+		BOX_TO_UNBOX_MAP = new HashMap<>();
+		BOX_TO_UNBOX_MAP.put("Void", "void");
+		BOX_TO_UNBOX_MAP.put("Integer", "int");
+	}
+	public static String getUnboxedTypeString(final String s) {
+		final String type = BOX_TO_UNBOX_MAP.get(s);
+		if (type == null) {
+			return s; // could not unwrap
+		}
+		return type;
+	}
 }

@@ -1,5 +1,7 @@
 package ar.edu.itba.kUltra.symbols;
 
+import ar.edu.itba.kUltra.helpers.TypeConverter;
+
 import java.util.*;
 
 public class ParameterListSymbol {
@@ -29,7 +31,7 @@ public class ParameterListSymbol {
 		private final int position;
 
 		private ParameterSymbol(final String type, final String identifier, final int position) {
-			this.type = type;
+			this.type = TypeConverter.getUnboxedTypeString(type);
 			this.identifier = identifier;
 			this.position = position;
 		}
