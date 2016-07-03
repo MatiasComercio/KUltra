@@ -1,0 +1,42 @@
+# Counts how many times a given digit appears on a given number
+int n;
+int count;
+count = 0;
+int d;
+d = 0;
+int aux;
+aux = 1;
+# Generate INTEGER_MIN
+int INTEGER_MIN;
+INTEGER_MIN = -2147483647;
+INTEGER_MIN = INTEGER_MIN - 1;
+n = INTEGER_MIN;
+while (n == INTEGER_MIN):
+    puts("Enter a number: ");
+    n = geti();
+    puts("\n");
+end
+int got;
+got = n;
+while(aux != 0):
+	puts("Enter a digit (from 0 to 9): ");
+	d = geti();
+	#puts("d value is: ");
+	#puti(d);
+	#puts("\n");
+	aux = d / 10;
+end
+while (n != 0):
+    if ((n%10) == d):
+        count = count + 1;
+    end
+
+    n = n / 10;
+end
+puts("The number '");
+puti(got);
+puts("' has digit '");
+puti(d);
+puts("' ");
+puti(count);
+puts(" times.\n");

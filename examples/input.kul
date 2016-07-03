@@ -43,7 +43,9 @@ int a;
 a = 2;
 
 str b;
-b = "en b";
+b = "en b\n";
+
+puts(b);
 
 puts("hola que tal\n");
 

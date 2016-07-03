@@ -1,0 +1,20 @@
+# Reverses the number digits
+def int reverse(int n):
+	int aux;
+	int ret;
+	ret = 0;
+	aux = n;
+	while(aux > 0):
+		ret = ret * 10 + (aux % 10);
+		aux = aux / 10;
+	end
+	return ret;
+end
+int n;
+puts("Ingresar un numero: ");
+n = geti();
+if(n == reverse(n)):
+	puts("It's capicua!\n");
+else:
+	puts("It's not capicua!\n");
+end
