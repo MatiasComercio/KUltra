@@ -89,7 +89,7 @@ voidFun("hello from voidFun. This is arg1", 5);
 
 puts("Enter 0 for 'Exiting' (close with no message)");
 puts(" or other num for 'Finishing' (close with a message)\n");
-if (geti() == 0):
+if (not (not(geti() == 0))):
     return;
 end
 

@@ -52,10 +52,9 @@ public Symbol symbol(String name, int code, Object lexem) {
 }
 
 public Symbol symbol(int code, Object lexem) {
-    Location left = new Location(filename, yyline+1, yycolumn + 1 - yylength());
-    Location right = new Location(filename, yyline+1, yycolumn + 1);
-    final Symbol s = symbolFactory.newSymbol(lexem.toString(), code, left, right, lexem);
-    return s;
+    Location left = new Location(filename, yyline+1, yycolumn + 1);
+    Location right = new Location(filename, yyline+1, yycolumn + yylength());
+    return symbolFactory.newSymbol(lexem.toString(), code, left, right, lexem);
 }
 
 %}
@@ -99,6 +98,7 @@ OctDigit          = [0-7]
     "%"                            { LOGGER.debug("%"); return symbol("mod", MOD); }
     "and"                          { LOGGER.debug("and"); return symbol("and", AND); }
     "or"                           { LOGGER.debug("or"); return symbol("or", OR); }
+    "not"                          { LOGGER.debug("not"); return symbol("not", NOT); }
     "<"                            { LOGGER.debug("<"); return symbol("<", LT); }
     "<="                           { LOGGER.debug("<="); return symbol("<=", LTEQ); }
     ">"                            { LOGGER.debug(">"); return symbol(">", GT); }

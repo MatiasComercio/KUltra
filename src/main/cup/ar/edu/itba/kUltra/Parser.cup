@@ -11,22 +11,16 @@ import org.slf4j.LoggerFactory;
 
 parser code {:
     private final static Logger LOGGER = LoggerFactory.getLogger(Parser.class);
-    Scanner scanner;
+    private Scanner scanner;
 
-  public Parser(Scanner scann, ComplexSymbolFactory sf) {
-    super(scann,sf);
-    scanner = scann;
-  }
-
-	public static void main(String args[]) throws Exception {
-		ComplexSymbolFactory sf = new ComplexSymbolFactory();
-		if (args.length==0) new Parser(new Scanner(System.in,sf),sf).parse();
-		else new Parser(new Scanner(new java.io.FileInputStream(args[0]),sf),sf).parse();
-	}
+    public Parser(final Scanner scanner, final ComplexSymbolFactory complexSymbolFactory) {
+        super(scanner,complexSymbolFactory);
+        this.scanner = scanner;
+    }
 :}
 
 terminal MINUS, PLUS, MULT, DIV, MOD, UMINUS; // UMINUS is a terminal JUST defined for precedence purposes
-terminal AND, OR;
+terminal AND, OR, NOT;
 terminal LT, LTEQ, GT, GTEQ, EQEQ, NOTEQ, EQ;
 terminal LPAREN, RPAREN;
 terminal SEMICOLON, COMMA, COLON;
@@ -58,6 +52,7 @@ non terminal NodeList<ExpressionNode> Arguments;
 non terminal LiteralNode Literal;
 
 precedence left AND, OR;
+precedence left NOT;
 precedence left LT, LTEQ, GT, GTEQ, EQEQ, NOTEQ;
 precedence left MINUS, PLUS;
 precedence left MULT, DIV, MOD;
@@ -111,6 +106,7 @@ Expression              ::=             Expression:e1 MINUS Expression:e2 {: RES
                                         | Expression:e1 MOD Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.REM, e1, e2); LOGGER.debug("{}", RESULT); :}
                                         | Expression:e1 AND Expression:e2 {: RESULT = new BinaryLogicalNode(GeneratorAdapter.AND, e1, e2); LOGGER.debug("{}", RESULT); :}
                                         | Expression:e1 OR Expression:e2 {: RESULT = new BinaryLogicalNode(GeneratorAdapter.OR, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | NOT Expression:e {: RESULT = new NotLogicalNode(e); LOGGER.debug("{}", RESULT); :}
                                         | Expression:e1 LT Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.LT, e1, e2); LOGGER.debug("{}", RESULT); :}
                                         | Expression:e1 LTEQ Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.LE, e1, e2); LOGGER.debug("{}", RESULT); :}
                                         | Expression:e1 GT Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.GT, e1, e2); LOGGER.debug("{}", RESULT); :}
