@@ -316,4 +316,26 @@ public class Context {
 	public void arithmeticOp(final int operation) {
 		mg.math(operation, Type.INT_TYPE);
 	}
+
+	public void notLogicalOp() {
+		final Label evaluatesTrue = mg.newLabel();
+		final Label evaluatesFalse = mg.newLabel();
+		final Label endExecution = mg.newLabel();
+
+		// if top of stack != 0 => top of stack is "true" => set "false" at the top of the stack
+		mg.ifZCmp(GeneratorAdapter.NE, evaluatesTrue);
+		// if top of stack == 0 => top of stack is "false" => set "true" at the top of the stack
+		mg.goTo(evaluatesFalse);
+
+		/* condition == true label */
+		mg.visitLabel(evaluatesTrue);
+		mg.push(false);
+		mg.goTo(endExecution);
+
+		/* condition == false label */
+		mg.visitLabel(evaluatesFalse);
+		mg.push(true);
+
+		mg.visitLabel(endExecution);
+	}
 }

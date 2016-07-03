@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 
 public class SimpleProgram {
 
@@ -65,6 +66,13 @@ public class SimpleProgram {
 		while (i < 5) {
 			println(greet);
 			i = i + 1;
+		}
+
+		/* not example */
+		boolean b = new Random().nextBoolean();
+		b = !b;
+		if (!b) {
+			System.out.println("b is false");
 		}
 
 
