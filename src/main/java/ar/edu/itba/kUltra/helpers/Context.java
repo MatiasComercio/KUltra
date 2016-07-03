@@ -1,5 +1,6 @@
 package ar.edu.itba.kUltra.helpers;
 
+import ar.edu.itba.kUltra.exceptions.CompileException;
 import ar.edu.itba.kUltra.nodes.*;
 import ar.edu.itba.kUltra.symbols.MethodSymbol;
 import ar.edu.itba.kUltra.symbols.ParameterListSymbol;
@@ -40,7 +41,7 @@ public class Context {
 		this.mg = mg;
 
 		if (definedMethods == null) {
-			throw new IllegalArgumentException("defineMethods cannot be null");
+			throw new CompileException("defineMethods cannot be null");
 		}
 		this.definedMethods = definedMethods;
 
@@ -64,7 +65,7 @@ public class Context {
 
 	public void setVariable(final Type type, final String identifier) {
 		if (definedVariablesName.contains(identifier)) {
-			throw new IllegalArgumentException("Variable: '" + identifier + "' was already defined on this context");
+			throw new CompileException("Variable: '" + identifier + "' was already defined on this context");
 		}
 
 		final int vIndex = mg.newLocal(type);
@@ -75,7 +76,7 @@ public class Context {
 	public void loadVariable(final VariableNode v) {
 		final String vName = v.getName();
 		if (!definedVariablesName.contains(vName)) {
-			throw new IllegalArgumentException("Variable '" + vName + "' is not defined on this context");
+			throw new CompileException("Variable '" + vName + "' is not defined on this context");
 		}
 
 		loadToStack(vName);
@@ -123,7 +124,7 @@ public class Context {
 
 	public void assignTo(final String identifier) {
 		if (!definedVariablesName.contains(identifier)) {
-			throw new IllegalArgumentException("This variable is not defined on this context");
+			throw new CompileException("This variable is not defined on this context");
 		}
 
 		storeFromStack(identifier);
@@ -132,7 +133,7 @@ public class Context {
 	public void methodCall(final String identifier, final NodeList<ExpressionNode> arguments) {
 		// check if method exists
 		if (!definedMethods.containsKey(identifier)) {
-			throw new IllegalArgumentException("Method '" + identifier + "' is not defined");
+			throw new CompileException("Method '" + identifier + "' is not defined");
 		}
 
 		// load requested variables, in the given order

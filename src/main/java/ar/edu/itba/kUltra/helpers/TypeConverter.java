@@ -1,5 +1,6 @@
 package ar.edu.itba.kUltra.helpers;
 
+import ar.edu.itba.kUltra.exceptions.CompileException;
 import org.objectweb.asm.Type;
 
 import java.util.HashMap;
@@ -17,7 +18,7 @@ public abstract class TypeConverter {
 	public static Type getType(final String s) {
 		final Type type = STRING_TYPE_MAP.get(s);
 		if (type == null) {
-			throw new IllegalArgumentException("'" + s + "' is not a valid type");
+			throw new CompileException("'" + s + "' is not a valid type");
 		}
 		return type;
 	}

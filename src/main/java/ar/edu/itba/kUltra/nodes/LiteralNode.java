@@ -1,5 +1,6 @@
 package ar.edu.itba.kUltra.nodes;
 
+import ar.edu.itba.kUltra.exceptions.CompileException;
 import ar.edu.itba.kUltra.helpers.Context;
 
 public class LiteralNode<T> implements ExpressionNode {
@@ -36,7 +37,7 @@ public class LiteralNode<T> implements ExpressionNode {
 			return;
 		}
 
-		throw new IllegalArgumentException("Not a valid type");
+		throw new CompileException("Not a valid type");
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package ar.edu.itba.kUltra;
 
+import ar.edu.itba.kUltra.exceptions.CompileException;
 import ar.edu.itba.kUltra.nodes.ProgramNode;
 import java_cup.runtime.ComplexSymbolFactory;
 import java_cup.runtime.Symbol;
@@ -65,6 +66,7 @@ public class KUltra {
 			return; // just for the IDE compiler for not disturbing 'cause scanner's value
 		}
 
+		scanner.setFilename(file.toString());
 		final Parser parser = new Parser(scanner ,complexSymbolFactory);
 
 		final Symbol programSymbol;
@@ -87,11 +89,23 @@ public class KUltra {
 
 		final String fileName = file.getName();
 		final String className = fileName.substring(0, fileName.indexOf(LANGUAGE_FILE_EXTENSION));
-		programNode.compileAs(className, destinationFolder);
+		try {
+			programNode.compileAs(className, destinationFolder);
+		} catch (CompileException e) {
+			LOGGER.warn("A compiled exception occurred. Caused by: ", e);
+			System.out.println("[FAIL] - Reason: " + e.getMessage());
+			System.out.println("Aborting compiler...");
+			System.exit(EXECUTION_FAILED);
+		} catch (Exception e) {
+			LOGGER.warn("An unexpected exception occurred. Caused by: ", e);
+			System.out.println("An unexpected error occurred. Reason: " + e.getMessage());
+			System.out.println("Aborting...");
+			System.exit(EXECUTION_FAILED);
+		}
 	}
 
 	private static void parseFailed() {
-		System.out.println("A syntax error was detected at the given .kul file.");
+		System.out.println("A syntax error has been detected at the given .kul file.");
 		System.out.println("Please check it.");
 		System.exit(PARSE_FAILED);
 	}
