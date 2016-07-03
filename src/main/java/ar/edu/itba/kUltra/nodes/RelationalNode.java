@@ -34,9 +34,9 @@ public class RelationalNode implements OperationNode {
 	@Override
 	public void process(final Context context) {
 		e1.process(context);
-		context.unbox(type);
+//		context.unbox(type);
 		e2.process(context);
-		context.unbox(type);
+//		context.unbox(type);
 		// +++xcheck
 		context.conditionOp(type, operation);
 	}

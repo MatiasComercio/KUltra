@@ -10,7 +10,7 @@ public abstract class TypeConverter {
 	static {
 		STRING_TYPE_MAP = new HashMap<>();
 		STRING_TYPE_MAP.put("void", Type.VOID_TYPE);
-		STRING_TYPE_MAP.put("Integer", Type.getType(Integer.class));
+		STRING_TYPE_MAP.put("Integer", Type.INT_TYPE/*Type.getType(Integer.class)*/);
 		STRING_TYPE_MAP.put("String", Type.getType(String.class));
 	}
 

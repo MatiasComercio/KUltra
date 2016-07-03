@@ -24,16 +24,16 @@ public class SimpleProgram {
 		return s;
 	}
 
-	private static Integer geti() {
+	private static int geti() {
 		final String s = gets();
 		if (s == null) {
-			return null;
+			return Integer.MIN_VALUE;
 		}
 
 		try {
 			return Integer.valueOf(s);
 		} catch (NumberFormatException e) {
-			return null;
+			return Integer.MIN_VALUE;
 		}
 	}
 

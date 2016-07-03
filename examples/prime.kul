@@ -1,7 +1,9 @@
 # Returns 1 if number n is prime; 0 else
 def int isPrime(int n):
- 	int i = 2;
- 	int top = n * n;
+ 	int i;
+ 	i = 2;
+ 	int top;
+ 	top = n * n;
  	if(n <= 1):
  		return 0;
  	end
@@ -13,11 +15,13 @@ def int isPrime(int n):
  	end
  	return 1;
 end
+
 puts("Enter a number: ");
-int number = geti();
-if (isPrime(number)):
+int number;
+number = geti();
+number = isPrime(number);
+if (number):
 	puts("Is prime!\n");
 else:
 	puts("Is not prime!\n");
 end
-return 0;

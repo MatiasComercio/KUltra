@@ -147,7 +147,7 @@ public class Context {
 
 	public void push(final Integer value) {
 		mg.push(value);
-		mg.box(Type.INT_TYPE);
+//		mg.box(Type.INT_TYPE);
 	}
 
 	public void push(final String value) {

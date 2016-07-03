@@ -36,11 +36,11 @@ public class TestNodes {
 		/* geti test */
 		final NodeList<ExpressionNode> putsArgs2 = new NodeList<>();
 		putsArgs2.add(new MethodCallNode("geti", new NodeList<>()));
-		mainBodyNode.add(new MethodCallNode("puts", putsArgs2));
+		mainBodyNode.add(new MethodCallNode("puti", putsArgs2));
 
-		final NodeList<ExpressionNode> putsArgs = new NodeList<>();
-		putsArgs.add(new VariableNode("getiInput"));
-		mainBodyNode.add(new MethodCallNode("puts", putsArgs));
+		final NodeList<ExpressionNode> putiArgs = new NodeList<>();
+		putiArgs.add(new VariableNode("getiInput"));
+		mainBodyNode.add(new MethodCallNode("puti", putiArgs));
 		mainBodyNode.add(new AssignmentNode("getiInput", new MethodCallNode("geti", new NodeList<>())));
 		mainBodyNode.add(new DeclarationNode("Integer", "getiInput"));
 
@@ -53,7 +53,7 @@ public class TestNodes {
 
 		final BodyNode whileBodyNode = new BodyNode();
 		whileBodyNode.add(new MethodCallNode("puts", putsArgument("\n")));
-		whileBodyNode.add(new MethodCallNode("puts", putsArgument(i)));
+		whileBodyNode.add(new MethodCallNode("puti", putsArgument(i)));
 		whileBodyNode.add(new AssignmentNode("i", new ArithmeticNode(GeneratorAdapter.ADD, i, new LiteralNode<>(1))));
 
 		final StatementNode whileNode = new WhileNode(whileCondition, whileBodyNode);
@@ -76,7 +76,7 @@ public class TestNodes {
 
 		final BodyNode elseBodyNode = new BodyNode();
 		elseBodyNode.add(new MethodCallNode("puts", putsArgument("i>= 18\n")));
-
+//
 		final StatementNode ifNode = new IfNode(condition, ifBodyNode, elseBodyNode);
 		mainBodyNode.add(ifNode);
 //		printGetInput(mainBodyNode);
@@ -92,7 +92,7 @@ public class TestNodes {
 
 		final NodeList<ExpressionNode> argumentNodes = new NodeList<>();
 		argumentNodes.add(i);
-		final MethodCallNode putsMethod = new MethodCallNode("puts", argumentNodes);
+		final MethodCallNode putsMethod = new MethodCallNode("puti", argumentNodes);
 		mainBodyNode.add(putsMethod);
 
 		final VariableNode a1 = new VariableNode("a1");

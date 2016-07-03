@@ -20,11 +20,11 @@ public class ArithmeticNode implements OperationNode {
 	@Override
 	public void process(final Context context) {
 		v1.process(context);
-		context.unbox(type);
+//		context.unbox(type);
 		v2.process(context);
-		context.unbox(type);
+//		context.unbox(type);
 		context.arithmeticOp(operation);
-		context.box(type);
+//		context.box(type);
 	}
 
 	@Override

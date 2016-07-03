@@ -72,7 +72,7 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 	/* Modified from ASMified code */
 	private void generateGetiMethod(final ClassWriter cw, final DefinedMethods definedMethods, final String className) {
 		final String methodName = "geti";
-		final String methodSignature = "Integer geti ()";
+		final String methodSignature = "int geti ()";
 		Method m = Method.getMethod(methodSignature);
 		final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
 		Label l0 = new Label();
@@ -84,17 +84,18 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		mg.visitVarInsn(ASTORE, 0);
 		mg.visitVarInsn(ALOAD, 0);
 		mg.visitJumpInsn(IFNONNULL, l0);
-		mg.visitInsn(ACONST_NULL);
-		mg.visitInsn(ARETURN);
+		mg.visitLdcInsn(-2147483648);
+		mg.visitInsn(IRETURN);
 		mg.visitLabel(l0);
 		mg.visitVarInsn(ALOAD, 0);
 		mg.invokeStatic(Type.getType(Integer.class), Method.getMethod("Integer valueOf(String)"));
+		mg.invokeVirtual(Type.getType(Integer.class), Method.getMethod("int intValue()"));
 		mg.visitLabel(l1);
-		mg.visitInsn(ARETURN);
+		mg.visitInsn(IRETURN);
 		mg.visitLabel(l2);
 		mg.visitVarInsn(ASTORE, 1);
-		mg.visitInsn(ACONST_NULL);
-		mg.visitInsn(ARETURN);
+		mg.visitLdcInsn(-2147483648);
+		mg.visitInsn(IRETURN);
 
 		mg.endMethod();
 		mg.visitEnd();
@@ -165,6 +166,21 @@ public class ProgramNode /* +++xcheck: should implement Node? */ {
 		mg.visitEnd();
 
 		definedMethods.put(putsMethodName, new MethodSymbol(putsMethodName, putsMethodSignature));
+
+		/* int version */
+		final String putiMethodName = "puti";
+		final String putiMethodSignature = "void puti (int)";
+		m = Method.getMethod(putiMethodSignature);
+		mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);
+		mg.getStatic(Type.getType(System.class), "out", Type.getType(PrintStream.class));
+		mg.loadArg(0);
+		mg.invokeVirtual(Type.getType(PrintStream.class),
+				Method.getMethod("void print (int)"));
+		mg.returnValue();
+		mg.endMethod();
+		mg.visitEnd();
+
+		definedMethods.put(putiMethodName, new MethodSymbol(putiMethodName, putiMethodSignature));
 	}
 
 	private void generateAuxiliaryMethods(final ClassWriter cw, final DefinedMethods definedMethods) {
