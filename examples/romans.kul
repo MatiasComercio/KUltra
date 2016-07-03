@@ -1,0 +1,105 @@
+# prints numbers in roman format, from 1 to the given number
+# IMPORTANT: max supported number in roman format is 399,
+# because it does not have implemented neither the 'D' nor the 'M' letter
+
+def void print(int n):
+	if(n == 1):
+		puts("I");
+	else:
+		if(n == 2):
+			puts("V");
+		else:
+			if(n == 3):
+				puts("X");
+			else:
+				if(n == 4):
+					puts("L");
+				else:
+					if(n == 5):
+						puts("C");
+					end
+				end
+			end
+		end
+	end
+	return;
+end
+int num;
+num = 0;
+int aux;
+aux = 0;
+int mirror;
+mirror = 0;
+int lastDigit;
+lastDigit = 0;
+int decimal;
+decimal = 0;
+int var1;
+var1 = 0;
+int var2;
+var2 = 0;
+int var3;
+var3 = 0;
+int i;
+i = 0;
+int j;
+j = 0;
+int limit;
+limit = 0;
+puts("Insert number: ");
+limit = geti();
+puts("Decimal:\tRoman:\n");
+num = 1;
+while(num <= limit):
+	puti(num);
+	puts("\t");
+	aux = num;
+	decimal = 0;
+	mirror = 0;
+	while(aux != 0):
+		mirror = mirror * 10 + aux % 10;
+		aux = aux / 10;
+		decimal = decimal + 1;
+	end
+	i = decimal;
+	while(i >= 1):
+		if(i == 1):
+			var1 = 1;
+			var2 = 2;
+			var3 = 3;
+		else:
+			if(i == 2):
+				var1 = 3;
+				var2 = 4;
+				var3 = 5;
+			else:
+				if(i == 3):
+					var1 = 5;
+				end
+			end
+		end
+		lastDigit = mirror % 10;
+		mirror = mirror / 10;
+		if(lastDigit == 4 or lastDigit == 9):
+			print(var1);
+			if(lastDigit == 9):
+				print(var3);
+			else:
+				print(var2);
+			end
+		else:
+			if(lastDigit >= 5):
+				print(var2);
+				lastDigit = lastDigit - 5;
+			end
+			j = 0;
+			while(j != lastDigit):
+				print(var1);
+				j = j + 1;
+			end
+		end
+		i = i - 1;
+	end
+	puts("\n");
+	num = num + 1;
+end
