@@ -142,9 +142,11 @@ OctDigit          = [0-7]
 <STATE_STRING> {
     \"                             { LOGGER.debug("\"");  yybegin(YYINITIAL); return symbol(STRING, string.toString()); }
 
-    {StringCharacter}+             { string.append( yytext() ); }
+    {StringCharacter}+             { LOGGER.debug("{}", yytext()); string.append( yytext() ); }
 
     /* escape sequences */
+    "("                            { LOGGER.debug("("); string.append( '(' ); }
+    ")"                            { LOGGER.debug(")"); string.append( ')' ); }
     "\\b"                          { LOGGER.debug("\\b"); string.append( '\b' ); }
     "\\t"                          { LOGGER.debug("\\t"); string.append( '\t' ); }
     "\\n"                          { LOGGER.debug("\\n"); string.append( '\n' ); }

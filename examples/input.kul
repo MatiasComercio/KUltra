@@ -30,9 +30,9 @@ def void voidFun(str arg1, int arg2):
     int var1;
     var1 = arg2 * 2 + 1 - 5/2 % recursive(2);
     if (var1 < 3):
-        puts("var1: "); puti(var1); puts("is less than 3\n");
+        puts("var1: "); puti(var1); puts(" is less than 3\n");
     else:
-        puts("var1: "); puti(var1); puts("is greater or equal than 3\n");
+        puts("var1: "); puti(var1); puts(" is greater or equal than 3\n");
     end
 
     return;
@@ -86,5 +86,12 @@ puti(geti());
 puts("\n");
 
 voidFun("hello from voidFun. This is arg1", 5);
+
+puts("Enter 0 for 'Exiting' (close with no message)");
+puts(" or other num for 'Finishing' (close with a message)\n");
+if (geti() == 0):
+    return;
+end
+
 puts("Finishing program...\n");
 puts("[DONE]\n");
