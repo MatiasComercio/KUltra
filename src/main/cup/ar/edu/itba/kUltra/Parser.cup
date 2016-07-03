@@ -1,6 +1,7 @@
 package ar.edu.itba.kUltra;
 
 import java_cup.runtime.*;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 import ar.edu.itba.kUltra.nodes.*;
 import ar.edu.itba.kUltra.symbols.*;
@@ -108,14 +109,14 @@ Expression              ::=             Expression:e1 MINUS Expression:e2 {: RES
                                         | Expression:e1 MULT Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.MUL, e1, e2); LOGGER.debug("{}", RESULT); :}
                                         | Expression:e1 DIV Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.DIV, e1, e2); LOGGER.debug("{}", RESULT); :}
                                         | Expression:e1 MOD Expression:e2 {: RESULT = new ArithmeticNode(GeneratorAdapter.REM, e1, e2); LOGGER.debug("{}", RESULT); :}
-                                        | Expression:e1 AND Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.AND, e1, e2); LOGGER.debug("{}", RESULT); :}
-                                        | Expression:e1 OR Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.OR, e1, e2); LOGGER.debug("{}", RESULT); :}
-                                        | Expression:e1 LT Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.LT, e1, e2); LOGGER.debug("{}", RESULT); :}
-                                        | Expression:e1 LTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.LE, e1, e2); LOGGER.debug("{}", RESULT); :}
-                                        | Expression:e1 GT Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.GT, e1, e2); LOGGER.debug("{}", RESULT); :}
-                                        | Expression:e1 GTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.GE, e1, e2); LOGGER.debug("{}", RESULT); :}
-                                        | Expression:e1 EQEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.EQ, e1, e2); LOGGER.debug("{}", RESULT); :}
-                                        | Expression:e1 NOTEQ Expression:e2 {: RESULT = new RelationalNode(GeneratorAdapter.NE, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 AND Expression:e2 {: RESULT = new LogicalNode(GeneratorAdapter.AND, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 OR Expression:e2 {: RESULT = new LogicalNode(GeneratorAdapter.OR, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 LT Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.LT, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 LTEQ Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.LE, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 GT Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.GT, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 GTEQ Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.GE, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 EQEQ Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.EQ, e1, e2); LOGGER.debug("{}", RESULT); :}
+                                        | Expression:e1 NOTEQ Expression:e2 {: RESULT = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.NE, e1, e2); LOGGER.debug("{}", RESULT); :}
                                         | MINUS Expression:e {: RESULT = new ArithmeticNode(GeneratorAdapter.SUB, new LiteralNode<>(0), e); LOGGER.debug("{}", RESULT); :} /* +++ximprove */ %prec UMINUS
                                         | LPAREN Expression:e RPAREN {: RESULT = e; LOGGER.debug("Expression - {}", RESULT); :}
                                         | MethodCall:mc {: RESULT = mc; LOGGER.debug("Expression - {}", RESULT); :}

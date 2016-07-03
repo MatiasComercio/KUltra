@@ -2,6 +2,7 @@ package ar.edu.itba.kUltra.tests;
 
 import ar.edu.itba.kUltra.nodes.*;
 import ar.edu.itba.kUltra.symbols.ParameterListSymbol;
+import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 
 public class TestNodes {
@@ -45,7 +46,7 @@ public class TestNodes {
 
 		final VariableNode i = new VariableNode("i");
 		/* while statement */
-		final ExpressionNode whileCondition = new RelationalNode(GeneratorAdapter.LT, i, new LiteralNode<>(18));
+		final ExpressionNode whileCondition = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.LT, i, new LiteralNode<>(18));
 
 		final BodyNode whileBodyNode = new BodyNode();
 		whileBodyNode.add(new MethodCallNode("puts", putsArgument("\n")));
@@ -64,7 +65,7 @@ public class TestNodes {
 			}
 		 */
 
-		final ExpressionNode condition = new RelationalNode(GeneratorAdapter.LT, i, new LiteralNode<>(18));
+		final ExpressionNode condition = new RelationalNode(Type.INT_TYPE, GeneratorAdapter.LT, i, new LiteralNode<>(18));
 
 		final BodyNode ifBodyNode = new BodyNode();
 		printGetInput(ifBodyNode);

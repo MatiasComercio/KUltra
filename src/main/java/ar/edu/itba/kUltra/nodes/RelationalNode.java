@@ -4,14 +4,16 @@ import ar.edu.itba.kUltra.helpers.Context;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.GeneratorAdapter;
 
-public class RelationalNode implements ExpressionNode {
+public class RelationalNode implements OperationNode {
+	private final Type type;
 	private final int operation;
 
 	private final ExpressionNode e1;
 	private final ExpressionNode e2;
 
 
-	public RelationalNode(final int operation, final ExpressionNode e1, final ExpressionNode e2) {
+	public RelationalNode(final Type type, final int operation, final ExpressionNode e1, final ExpressionNode e2) {
+		this.type = type;
 		this.operation = operation;
 		this.e1 = e1;
 		this.e2 = e2;
@@ -32,11 +34,11 @@ public class RelationalNode implements ExpressionNode {
 	@Override
 	public void process(final Context context) {
 		e1.process(context);
-		context.unbox(Type.INT_TYPE);
+		context.unbox(type);
 		e2.process(context);
-		context.unbox(Type.INT_TYPE);
-		// +++xmagicnumber
-		context.conditionOp(Type.INT_TYPE, operation); // +++xcheck: is Type necessary?
+		context.unbox(type);
+		// +++xcheck
+		context.conditionOp(type, operation);
 	}
 
 	@Override
@@ -46,5 +48,10 @@ public class RelationalNode implements ExpressionNode {
 				", e1=" + e1 +
 				", e2=" + e2 +
 				'}';
+	}
+
+	@Override
+	public Type getType() {
+		return type;
 	}
 }
