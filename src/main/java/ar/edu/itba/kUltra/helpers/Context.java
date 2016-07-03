@@ -124,7 +124,7 @@ public class Context {
 
 	public void assignTo(final String identifier) {
 		if (!definedVariablesName.contains(identifier)) {
-			throw new CompileException("This variable is not defined on this context");
+			throw new CompileException("Variable '" + identifier + "' is not defined on this context");
 		}
 
 		storeFromStack(identifier);
@@ -134,6 +134,16 @@ public class Context {
 		// check if method exists
 		if (!definedMethods.containsKey(identifier)) {
 			throw new CompileException("Method '" + identifier + "' is not defined");
+		}
+
+		final MethodSymbol methodSymbol = definedMethods.get(identifier);
+
+		final int argumentsSize = arguments == null ? 0 : arguments.size();
+		// added compile time check for #arguments
+		if (argumentsSize != methodSymbol.getParameterListSymbol().size()) {
+			throw new CompileException("Method '" + methodSymbol.getSignature() + "' called with an " +
+					"invalid amount of parameters.\n" +
+					"Found: " + argumentsSize + ". Required: " + methodSymbol.getParameterListSymbol().size());
 		}
 
 		// load requested variables, in the given order
@@ -280,7 +290,7 @@ public class Context {
 	                         final BodyNode bodyNode, final Type returnType) {
 		/* first, save it as defined so as to be able to use it later */
 		definedMethods.put(identifier,
-				new MethodSymbol(identifier, signature));
+				new MethodSymbol(identifier, signature, argumentNodes, returnType));
 
 		final Method m = Method.getMethod(signature);
 		final GeneratorAdapter mg = new GeneratorAdapter(ACC_PUBLIC + ACC_STATIC, m, null, null, cw);

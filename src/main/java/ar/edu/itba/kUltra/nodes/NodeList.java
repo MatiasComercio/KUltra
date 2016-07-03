@@ -27,4 +27,8 @@ public class NodeList<T extends Node> implements Node {
 				"nodeList=" + nodeList +
 				'}';
 	}
+
+	public int size() {
+		return nodeList.size();
+	}
 }

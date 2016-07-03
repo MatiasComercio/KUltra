@@ -25,6 +25,10 @@ public class ParameterListSymbol {
 		return list;
 	}
 
+	public int size() {
+		return parameterSymbols.size();
+	}
+
 	public static class ParameterSymbol {
 		private final String type;
 		private final String identifier;

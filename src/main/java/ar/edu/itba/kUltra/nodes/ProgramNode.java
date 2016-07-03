@@ -100,7 +100,8 @@ public class ProgramNode /* it is not necessary that it implements Node, no proc
 		mg.endMethod();
 		mg.visitEnd();
 
-		definedMethods.put(methodName, new MethodSymbol(methodName, methodSignature));
+		definedMethods.put(methodName, new MethodSymbol(methodName, methodSignature,
+				new ParameterListSymbol(), Type.INT_TYPE));
 	}
 
 	private static void generateGetsMethod(final ClassWriter cw, final DefinedMethods definedMethods) {
@@ -148,7 +149,9 @@ public class ProgramNode /* it is not necessary that it implements Node, no proc
 		mg.endMethod();
 		mg.visitEnd();
 
-		definedMethods.put(methodName, new MethodSymbol(methodName, methodSignature));
+		final ParameterListSymbol parameterListSymbol = new ParameterListSymbol();
+		definedMethods.put(methodName, new MethodSymbol(methodName, methodSignature, parameterListSymbol,
+				Type.getType(String.class)));
 	}
 
 	private static void generatePutsMethod(final ClassWriter cw, final DefinedMethods definedMethods) {
@@ -165,7 +168,10 @@ public class ProgramNode /* it is not necessary that it implements Node, no proc
 		mg.endMethod();
 		mg.visitEnd();
 
-		definedMethods.put(putsMethodName, new MethodSymbol(putsMethodName, putsMethodSignature));
+		final ParameterListSymbol putsParameterListSymbol = new ParameterListSymbol();
+		putsParameterListSymbol.addParameter("Object", "o");
+		definedMethods.put(putsMethodName, new MethodSymbol(putsMethodName, putsMethodSignature,
+				putsParameterListSymbol, Type.VOID_TYPE));
 
 		/* int version */
 		final String putiMethodName = "puti";
@@ -180,7 +186,10 @@ public class ProgramNode /* it is not necessary that it implements Node, no proc
 		mg.endMethod();
 		mg.visitEnd();
 
-		definedMethods.put(putiMethodName, new MethodSymbol(putiMethodName, putiMethodSignature));
+		final ParameterListSymbol putiParameterListSymbol = new ParameterListSymbol();
+		putiParameterListSymbol.addParameter("int", "i1");
+		definedMethods.put(putiMethodName, new MethodSymbol(putiMethodName, putiMethodSignature,
+				putiParameterListSymbol, Type.VOID_TYPE));
 	}
 
 	private void generateAuxiliaryMethods(final ClassWriter cw, final DefinedMethods definedMethods) {
@@ -215,7 +224,7 @@ public class ProgramNode /* it is not necessary that it implements Node, no proc
 
 	private static void generateClassFile(final ClassWriter cw, final String className, final String destinationFolder) {
 		byte[] classBytes = cw.toByteArray();
-		final File compileFolder = new File(destinationFolder); // +++xchange: do this with maven
+		final File compileFolder = new File(destinationFolder);
 		compileFolder.mkdirs(); // tries to make directories for the .class destination
 
 		/* delete previous .class file, if any */
