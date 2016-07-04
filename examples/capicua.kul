@@ -1,3 +1,5 @@
+# Capicua works just for positive numbers
+
 # Reverses the number digits
 def int reverse(int n):
 	int aux;

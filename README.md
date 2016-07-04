@@ -12,11 +12,11 @@ once on the same folder as the main's pom file, execute:
     $ mvn clean package
 
 ## Usage
-To compile a .kul file, get the KUltra-jar-with-dependencies.jar
+To compile a .kul file, get the kUltra-jar-with-dependencies.jar
 generated with the above command (should be on folder 'target'),
 and run:
 
-    $ java -jar KUltra-jar-with-dependencies.jar compile <path/to/.kul> <destination/path>
+    $ java -jar kUltra-jar-with-dependencies.jar compile <path/to/.kul> <destination/path>
   , where 
 
     <destination/path>

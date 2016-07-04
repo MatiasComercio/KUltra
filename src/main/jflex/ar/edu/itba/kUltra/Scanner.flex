@@ -23,6 +23,7 @@ import static ar.edu.itba.kUltra.Symbols.*;
 %class Scanner
 
 %{
+// code extracted and modified from: https://github.com/federicobond/primer
 private final static Logger LOGGER = LoggerFactory.getLogger(Scanner.class);
 private final StringBuilder string = new StringBuilder();
 
